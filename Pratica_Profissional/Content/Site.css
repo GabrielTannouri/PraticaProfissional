@@ -1,0 +1,46 @@
+﻿body {
+    padding-bottom: 20px;
+}
+
+.card {
+    background-color: saddlebrown;
+}
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.select2-header {
+    padding: 6px 13px 6px 9px;
+    background-color: #eee;
+    font-weight: bold;
+}
+
+.col-select2 {
+    padding-right: 2px !important;
+    padding-left: 2px !important;
+}
+
+.required:after {
+    content: "*";
+    margin-left: 5px;
+    text-align: center;
+    color: red;
+    font-size: 18px;
+}
+
+.kgroup {
+}
+
+    .kgroup .id-input {
+        max-width: 90px;
+    }
+
+    .kgroup #text-input {
+        width: 300px;
+    }
+
+    .kgroup #text-vlPrecoVenda {
+        width: 140px;
+    }

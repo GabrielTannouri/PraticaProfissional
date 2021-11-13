@@ -1,0 +1,48 @@
+﻿@using Pratica_Profissional.Util.Class;
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/select2.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/select2-bootstrap.css" rel="stylesheet" type="text/css" />
+    @*JAVASCRIPT*@
+    <script src="~/Scripts/jquery-3.6.0.js"></script>
+    <script src="~/Scripts/tDataTable.js"></script>
+    <script src="~/Scripts/DataTables/jquery.dataTables.js"></script>
+    <script src="~/Scripts/dataTables.bootstrap4.min.js"></script>
+    <script src="~/Scripts/inputmask/jquery.inputmask.js"></script>
+    <script src="~/Scripts/inputmask/inputmask.js"></script>
+    <script src="~/Scripts/inputmask/bindings/inputmask.binding.js"></script>
+    @*CSS*@
+    <link href="~/Content/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/DataTables/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/select2.js"></script>
+    <script src="~/Scripts/select2_locale_pt-BR.js"></script>
+    <script src="~/Scripts/sSelect.js"></script>
+
+    <script src="~/Scripts/Functions.js"></script>
+    <script src="~/Scripts/functionsb3.js"></script>
+    <script src="~/Scripts/bootstrap-notify.js"></script>
+    <script src="~/Scripts/Util.js"></script>
+    <script src="~/Scripts/autoNumeric-1.9.25.js"></script>
+    <link rel="stylesheet" href="~/Content/font-awesome.min.css">
+    <script src="~/Scripts/bootstrap-datepicker.js"></script>
+    <script src="~/Scripts/moment.js"></script>
+    <script src="~/Scripts/moment.min.js"></script>
+</head>
+<body>
+    @Html.Partial("_MenuSuperior")
+    <div class="container">
+
+        @RenderBody()
+        @Html.RenderScriptBlocks()
+        @RenderSection("scripts", false)
+
+    </div>
+</body>
+</html>

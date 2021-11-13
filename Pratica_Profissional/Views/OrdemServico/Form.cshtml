@@ -1,0 +1,408 @@
+﻿@using Pratica_Profissional.Util.Class;
+@model Pratica_Profissional.ViewModel.OrdemServicoVM
+
+@{
+    var action = ViewContext.Controller.ValueProvider.GetValue("action").RawValue.ToString().ToLower();
+    bool readOnly = Convert.ToBoolean(ViewBag.ReadOnly);
+    var pais = new Pratica_Profissional.Models.Pais();
+    string flSituacao = Convert.ToString(ViewBag.flSituacao);
+}
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" id="ordemServico-tab" data-toggle="tab" href="#ordemServico" role="tab" aria-controls="ordemServico" aria-selected="true">Ordem de serviço</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="historico-tab" data-toggle="tab" href="#historico" role="tab" aria-controls="historico" aria-selected="false">Histórico</a>
+    </li>
+</ul>
+@Html.AntiForgeryToken()
+<div class="tab-content">
+    <div class="tab-pane fade show active" id="ordemServico" role="tabpanel" aria-labelledby="home-tab">
+        @if (action == "create")
+        {
+            <div class="alert alert-warning" role="alert" id="divAlert">
+                <strong>ATENÇÃO!!</strong>
+                <p>Só é possível adicionar produtos e serviços após a ordem de serviço sair da situação aberta</p>
+            </div>
+        }
+        <h6 class="card-header">Informações</h6>
+        <div id="teste" class="card-body">
+            <div class="form-group">
+                <div class="form-row">
+
+                    <div class="@Helper.Input3">
+                        @Html.LabelFor(model => model.idOrdemServico, "Número OS", new { @class = Helper.LabelTop })
+                        @Html.TextBoxFor(model => model.idOrdemServico, new { @class = "form-control", disabled = true })
+                    </div>
+
+                    <div class="@Helper.Input3">
+                        @Html.LabelFor(model => model.dtSituacao, "Data", new { @class = Helper.LabelTop })
+                        @Html.TextBoxFor(model => model.dtSituacao, new { @type = "date", @class = "form-control", @id = "data" })
+                        @Html.ValidationMessageFor(model => model.dtSituacao, null, new { @class = "text-danger" })
+                    </div>
+
+                    @if (action == "edit")
+                    {
+                        <div class="@Helper.Input3">
+                            @Html.LabelFor(model => model.flSituacaoAux, "Situação atual", new { @class = Helper.LabelTop })
+                            @Html.TextBoxFor(model => model.flSituacaoAux, new { @class = "form-control", disabled = true })
+                        </div>
+                    }
+
+                    @if (action == "create" || action == "details")
+                    {
+                        <div class="@Helper.Input3">
+                            @Html.LabelFor(model => model.flSituacao, "Situação", new { @class = "required" })
+                            @Html.DropDownListFor(model => model.flSituacao, Pratica_Profissional.ViewModel.OrdemServicoVM.SituacaoCreate, new { @class = "form-control", @id = "flSituacao" })
+                        </div>
+                    }
+
+                    @if (flSituacao == "A")
+                    {
+                        <div class="@Helper.Input3">
+                            @Html.LabelFor(model => model.flSituacaoAberta, "Nova situação", new { @class = "required" })
+                            @Html.DropDownListFor(model => model.flSituacaoAberta, Pratica_Profissional.ViewModel.OrdemServicoVM.SituacaoAberta, new { @class = "form-control", @id = "flSituacao" })
+                        </div>
+                    }
+
+                    @if (flSituacao == "R")
+                    {
+                        <div class="@Helper.Input3">
+                            @Html.LabelFor(model => model.flSituacaoRealizado, "Nova situação", new { @class = "required" })
+                            @Html.DropDownListFor(model => model.flSituacaoRealizado, Pratica_Profissional.ViewModel.OrdemServicoVM.SituacaoOrcamentoRealizado, new { @class = "form-control", @id = "flSituacao" })
+                        </div>
+                    }
+
+                    @if (flSituacao == "O")
+                    {
+                        <div class="@Helper.Input3">
+                            @Html.LabelFor(model => model.flSituacaoAprovado, "Nova situação", new { @class = "required" })
+                            @Html.DropDownListFor(model => model.flSituacaoAprovado, Pratica_Profissional.ViewModel.OrdemServicoVM.SituacaoOrcamentoAprovado, new { @class = "form-control", @id = "flSituacao" })
+                        </div>
+                    }
+
+                    @if (flSituacao == "F")
+                    {
+                        <div class="@Helper.Input3">
+                            @Html.LabelFor(model => model.flSituacaoFechado, "Nova situação", new { @class = "required" })
+                            @Html.DropDownListFor(model => model.flSituacaoFechado, Pratica_Profissional.ViewModel.OrdemServicoVM.SituacaoFechado, new { @class = "form-control", @id = "flSituacao" })
+                        </div>
+                    }
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    @Html.EditorFor(u => u.Funcionario, "Funcionario/select", new { disabled = false })
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="form-row">
+                    @Html.EditorFor(u => u.Cliente, "Cliente/select", new { disabled = false })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    @Html.EditorFor(u => u.Produto, "Produto/select", new { disabled = false, classForm = Helper.Input12, classLabel = Helper.LabelXXS })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="@Helper.Input12">
+                        @Html.LabelFor(model => model.dsProduto, "Observações do produto", new { @class = Helper.LabelTop })
+                        @Html.TextAreaFor(model => model.dsProduto, new { @class = "form-control text" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="@Helper.Input12">
+                        @Html.LabelFor(model => model.dsProblema, "Problema apresentado", new { @class = Helper.LabelTop })
+                        @Html.TextAreaFor(model => model.dsProblema, new { @class = "form-control text" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h6 class="card-header">Lista de serviços a ser utilizado</h6>
+        <div class="card-body">
+            <div class="form-group">
+                <div class="form-row">
+                    @Html.EditorFor(u => u.Servico, "Servico/select", new { Label = "Serviço a ser realizado", disabled = false })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    @Html.EditorFor(u => u.FuncionarioExecutante, "FuncionarioExecutante/select", new { Label = "Funcionário executante", disabled = false })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="@Helper.Input2">
+                        @Html.Label("qtServico", "Quantidade", new { @class = Helper.LabelTop })
+                        @Html.TextBox("qtServico", null, new { @class = "form-control integer", @style = "text-align:right" })
+                    </div>
+
+                    <div class="@Helper.Input2">
+                        @Html.Label("vlUnitarioServico", "Valor unitário (R$)", new { @class = Helper.LabelTop })
+                        @Html.TextBox("vlUnitarioServico", null, new { @class = "form-control currency" })
+                    </div>
+
+                    <div class="@Helper.Input2">
+                        @Html.Label("vlTotalServico", "Total (R$)", new { @class = Helper.LabelTop })
+                        @Html.TextBox("vlTotalServico", null, new { @class = "form-control currency", disabled = true })
+                    </div>
+
+                    <div class="@Helper.Input3">
+                        @Html.Label("addServico", " ", new { @class = Helper.Label })
+                        <div class="@Helper.Input8" style="margin-top:7px;">
+                            <button id="addServico" role="button" class="btn btn-success"><i class="glyphicon glyphicon-plus-sign"></i> Adicionar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.HiddenFor(model => model.jsListServicosOS)
+                <table id="tblServicos" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                        <tr>
+                            @if (action != "details" && action != "cancelar")
+                            {
+                                <th></th>
+                            }
+                            <th style="width:10%;text-align:right">Cód.</th>
+                            <th width="30%">Serviço</th>
+                            <th width="30%">Funcionário executante</th>
+                            <th style="width:10%;text-align:right">Quantidade</th>
+                            <th style="width:10%;text-align:right">Valor Unitário</th>
+                            <th style="width:10%;text-align:right">Total</th>
+                        </tr>
+                        @Html.ValidationMessageFor(model => model.ListServicosItem, null, new { @class = "text-danger" })
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            @if (action == "details" || action == "cancelar")
+                            {
+                                <td colspan="5">
+                                    <span class="pull-right"><strong style="font-size:17px;">Total geral serviços (R$):</strong></span>
+                                </td>
+                            }
+                            else
+                            {
+                                <td colspan="6">
+                                    <span class="pull-right"><strong style="font-size:17px;">Total geral serviços (R$):</strong></span>
+                                </td>
+                            }
+
+                            <td style="background-color:#818787;color:#FFF">
+                                <span class="pull-right"><strong style="font-size:17px" id="vlTotalServicos"></strong></span>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        <h6 class="card-header">Lista de produtos a ser utilizado</h6>
+        <div class="card-body">
+            <div class="form-group">
+                <div class="form-row">
+                    @Html.EditorFor(u => u.ProdutoUtilizado, "ProdutoSelect/select", new { Label = "Produto a ser utilizado", disabled = false, required = false })
+
+                    <div class="@Helper.Input3">
+                        @Html.Label("flUnidade", "Unidade de medida", new { @class = Helper.LabelTop })
+                        @Html.DropDownList("flUnidade", Pratica_Profissional.ViewModel.ProdutoVM.unidade, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="@Helper.Input2">
+                        @Html.Label("qtProduto", "Quantidade", new { @class = Helper.LabelTop })
+                        @Html.TextBox("qtProduto", null, new { @class = "form-control integer", @style = "text-align:right" })
+                    </div>
+
+                    <div class="@Helper.Input2">
+                        @Html.Label("vlUnitario", "Valor unitário (R$)", new { @class = Helper.LabelTop })
+                        @Html.TextBox("vlUnitario", null, new { @class = "form-control currency" })
+                    </div>
+
+                    <div class="@Helper.Input2">
+                        @Html.Label("vlTotalProduto", "Total (R$)", new { @class = Helper.LabelTop })
+                        @Html.TextBox("vlTotalProduto", null, new { @class = "form-control currency", disabled = true })
+                    </div>
+
+                    <div class="@Helper.Input3">
+                        @Html.Label("addProduto", " ", new { @class = Helper.Label })
+                        <div class="@Helper.Input8" style="margin-top:7px;">
+                            <button id="addProduto" role="button" class="btn btn-success"><i class="glyphicon glyphicon-plus-sign"></i> Adicionar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.HiddenFor(model => model.jsListProdutosOS)
+                <table id="tblProdutos" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                        <tr>
+                            @if (action != "details" && action != "cancelar")
+                            {
+                                <th></th>
+                            }
+                            <th style="width:10%;text-align:right">Cód.</th>
+                            <th width="40%">Produto</th>
+                            <th width="10%">Un. medida</th>
+                            <th style="width:10%;text-align:right">Quantidade</th>
+                            <th style="width:10%;text-align:right">Valor Unitário</th>
+                            <th style="width:10%;text-align:right">Total</th>
+                        </tr>
+                        @Html.ValidationMessageFor(model => model.ListProdutosItem, null, new { @class = "text-danger" })
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            @if (action == "details" || action == "cancelar")
+                            {
+                                <td colspan="5">
+                                    <span class="pull-right"><strong style="font-size:17px;">Total geral produtos (R$):</strong></span>
+                                </td>
+                            }
+                            else
+                            {
+                                <td colspan="6">
+                                    <span class="pull-right"><strong style="font-size:17px;">Total geral produtos (R$):</strong></span>
+                                </td>
+                            }
+
+                            <td style="background-color:#818787;color:#FFF">
+                                <span class="pull-right"><strong style="font-size:17px" id="vlTotalProd"></strong></span>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        <h6 class="card-header">Valores da ordem de serviço</h6>
+        <div class="card-body">
+            <div class="form-group">
+                <div class="form-row">
+
+                    <div class="@Helper.Input3">
+                        @Html.LabelFor(model => model.vlDesconto, "Desconto                                  (R$)", new { @class = Helper.LabelTop })
+                        @Html.TextBoxFor(model => model.vlDesconto, new { @class = "form-control currency", @style = "text-align:right" })
+                        @Html.ValidationMessageFor(model => model.vlDesconto, null, new { @class = "text-danger" })
+                    </div>
+
+                    <div class="@Helper.Input3">
+                        @Html.LabelFor(model => model.vlTotal, "Total ordem de serviço (R$)", new { @class = Helper.LabelTop })
+                        @Html.TextBoxFor(model => model.vlTotal, new { @class = "form-control currency", @style = "text-align:right" })
+                        @Html.ValidationMessageFor(model => model.vlTotal, null, new { @class = "text-danger" })
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <h6 class="card-header">Condição de pagamento</h6>
+        <div class="card-body">
+            @if (action != "details" && action != "cancelar")
+            {
+                <div class="form-group">
+                    <div class="form-row">
+                        @Html.EditorFor(u => u.CondicaoPagamento, "CondicaoPagamento/select", new { disabled = false, classForm = Helper.Input10, classLabel = Helper.LabelXXS })
+
+                        <div class="@Helper.Input2">
+                            @Html.Label("gerarParcelas", " ", new { @class = Helper.Label })
+                            <div class="@Helper.Input12" style="margin-top:10px">
+                                <button id="gerarParcelas" role="button" class="btn btn-info"><i class="glyphicon glyphicon-plus-sign"></i> Gerar parcelas</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="form-group">
+                @Html.HiddenFor(model => model.jsListParcelasOS)
+                <table id="tblParcelas" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th style="width:10%;text-align:right">Parcela</th>
+                            <th width="50%">Forma pagamento</th>
+                            <th style="width:20%;text-align:right">Vencimento</th>
+                            <th style="width:20%;text-align:right">Valor</th>
+                        </tr>
+                        @Html.ValidationMessageFor(model => model.ListParcelas, null, new { @class = "text-danger" })
+                    </thead>
+                </table>
+
+            </div>
+
+            @if (action != "create")
+            {
+                <div class="form-group">
+                    <div class="form-row">
+                        <div class="@Helper.Input3">
+                            @Html.LabelFor(model => model.dtCadastro, "Data de cadastro", new { @class = Helper.LabelTop })
+                            @Html.TextBoxFor(model => model.dtCadastro, new { @class = "form-control", disabled = "disabled" })
+                        </div>
+
+                        <div class="@Helper.Input3">
+                            @Html.LabelFor(model => model.dtAtualizacao, "Última atualização", new { @class = Helper.LabelTop })
+                            @Html.TextBoxFor(model => model.dtAtualizacao, new { @class = "form-control", disabled = "disabled" })
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+    </div>
+
+    <div id="historico" class="tab-pane fade">
+        <h6 class="card-header">Histórico de situações da ordem de serviço</h6>
+        <div class="card-body">
+            <div class="form-group">
+                @Html.HiddenFor(model => model.jsListHistoricoOS)
+                <div class="table-responsive">
+                    <table id="tblHistorico" class="table table-striped table-bordered" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th width="70%">Realizou a alteração</th>
+                                <th width="15%">Data da situação</th>
+                                <th width="15%">Situação</th>
+                            </tr>
+                            @Html.ValidationMessageFor(model => model.ListHistoricoOrdemServico, null, new { @class = "text-danger" })
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="d-flex justify-content-end" style="padding-right:33px">
+    <button type="button" style="margin-right:10px" class="btn btn-primary" onclick="location.href='@Url.Action("Index", "OrdemServico")'">Sair</button>
+    @if ((action != "details") && (action != "delete"))
+    {
+        <button type="submit" class="btn btn-success">Salvar</button>
+    }
+    @if (action == "delete")
+    {
+        <button type="submit" class="btn btn-danger">Remover</button>
+    }
+
+</div>
+
+
+

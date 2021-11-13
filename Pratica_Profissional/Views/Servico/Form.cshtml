@@ -1,0 +1,78 @@
+﻿@using Pratica_Profissional.Util.Class;
+@model Pratica_Profissional.ViewModel.ServicoVM
+
+@{
+    var action = ViewContext.Controller.ValueProvider.GetValue("action").RawValue.ToString().ToLower();
+    bool readOnly = Convert.ToBoolean(ViewBag.ReadOnly);
+}
+
+@Html.AntiForgeryToken()
+
+<h6 class="card-header">Informações</h6>
+
+<div class="card-body">
+
+    @if (action != "create")
+    {
+        <div class="form-group">
+            <div class="form-row">
+                <div class="@Helper.Input2">
+                    @Html.LabelFor(model => model.idServico, "Código", new { @class = Helper.LabelTop })
+                    @Html.TextBoxFor(model => model.idServico, new { @class = "form-control", disabled = "disabled" })
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="form-group">
+        <div class="form-row">
+            <div class="@Helper.Input9">
+                @Html.LabelFor(model => model.nmServico, "Serviço", new { @class = "required" })
+                @Html.TextBoxFor(model => model.nmServico, new { @class = "form-control text", maxlength = "50" })
+                @Html.ValidationMessageFor(model => model.nmServico, null, new { @class = "text-danger" })
+            </div>
+
+            <div class="@Helper.Input3">
+                @Html.LabelFor(model => model.vlServico, "Valor (R$)", new { @class = "required" })
+                @Html.TextBoxFor(model => model.vlServico, new { @class = "form-control currency" })
+                @Html.ValidationMessageFor(model => model.vlServico, null, new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="form-row">
+            @if (action != "create")
+            {
+                <div class="d-flex align-items-start">
+                    <div class="@Helper.Input5">
+                        @Html.LabelFor(model => model.dtCadastro, "Data de cadastro", new { @class = Helper.LabelTop })
+                        @Html.TextBoxFor(model => model.dtCadastro, new { @class = "form-control", disabled = "disabled" })
+                    </div>
+
+                    <div class="@Helper.Input5">
+                        @Html.LabelFor(model => model.dtAtualizacao, "Última atualização", new { @class = Helper.LabelTop })
+                        @Html.TextBoxFor(model => model.dtAtualizacao, new { @class = "form-control", disabled = "disabled" })
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="d-flex justify-content-end" style="padding-right:33px">
+    <button type="button" style="margin-right:10px" class="btn btn-primary" onclick="location.href='@Url.Action("Index", "Servico")'">Sair</button>
+    @if ((action != "details") && (action != "delete"))
+    {
+        <button type="submit" class="btn btn-success">Salvar</button>
+    }
+    @if (action == "delete")
+    {
+        <button type="submit" class="btn btn-danger">Remover</button>
+    }
+
+</div>
+
+
+
+

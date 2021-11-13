@@ -1,0 +1,381 @@
+﻿@model Pratica_Profissional.ViewModel.EstadoVM
+@using Pratica_Profissional.Util.Class;
+@{
+    bool Disabled = Convert.ToBoolean(ViewData["Disabled"]);
+    bool Required = Convert.ToBoolean(ViewData["Required"] ?? true);
+    bool OnlySelect = Convert.ToBoolean(ViewData["onlySelect"] ?? false);
+    bool LabelVertical = Convert.ToBoolean(ViewData["LabelVertical"]);
+    string Label = Convert.ToString(ViewData["Label"] ?? "Estado");
+    string classLabel = Convert.ToString(ViewData["classLabel"] ?? Helper.Label);
+    string classForm = Convert.ToString(ViewData["classForm"] ?? Helper.Input12);
+    var Prefix = Html.ClientPrefixName().ToString(); ;
+    var Pais = new Pratica_Profissional.ViewModel.PaisVM();
+}
+
+@Html.Hidden("isEdit")
+<div class="@classForm">
+    @Html.LabelFor(model => model.idEstado, Label, new { @class = "required" })
+    <div class="input-group">
+        @Html.TextBoxFor(model => model.idEstado, new { @style = "border-radius: 4px 0px 0px 4px; width: 15%;", @class = "form-control number", maxLength = "6" })
+        @Html.TextBoxFor(model => model.text, new { @class = "form-control", @style = "width:70%" })
+        <a style="border-radius:0px 3px 3px 0px" data-target="#@Pratica_Profissional.Util.Class.Helper.getInputId("Modal", Prefix)" id="@Pratica_Profissional.Util.Class.Helper.getInputId("btn-localizar", Prefix)" title="Abrir a busca de @Label" class="btn btn-primary" data-toggle="modal"><i class="fa fa-search"></i></a>
+        @Html.HiddenFor(k => k.text)
+    </div>
+    @Html.ValidationMessageFor(model => model.idEstado, null, new { @class = "text-danger" })
+</div>
+
+<div id="@Pratica_Profissional.Util.Class.Helper.getInputId("ModalLista", Prefix)" class="modal fade" data-backdrop="static" data-keyboard="false" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body no-padding">
+                <div class="panel panel-primary" style="margin-bottom: -1px;">
+                    <div class="panel-heading" style="height: 41px; padding-left:2px;font-weight: bold;">
+                        <h3 class="panel-title pull-right"><button type="button" style="opacity: inherit;color: #fff;" class="close" data-dismiss="modal">&times;</button></h3>
+                        <ul class="nav panel-tabs" style="width:400px">
+                            <li class="active"><a data-event="true" style="margin-top:1px;color: black;" data-toggle="tab"><b><i class="fa fa-list-alt" aria-hidden="true"></i> Estados </b></a></li>
+                        </ul>
+                    </div>
+
+                    <div style="text-align:right">
+                        <button id="@Pratica_Profissional.Util.Class.Helper.getInputId("Create", Prefix)" onclick="OpenModalCreateEstado()" type="button" class="btn btn-success"><i class="fa fa-plus"></i>  Adicionar</button>
+                    </div>
+                    <div id="body" class="modal-body" style="padding: 33px 0px 0px 0px;">
+                        <div class="container-fluid">
+                            <div id="TableEstado"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div style="text-align:right">
+                            <button id="@Pratica_Profissional.Util.Class.Helper.getInputId("Fechar", Prefix)" onclick="FecharModalEstado()" type="button" class="btn btn-outline-dark"><i class="fa fa-times"></i> Fechar</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="@Pratica_Profissional.Util.Class.Helper.getInputId("ModalCreate", Prefix)" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body no-padding">
+                <div class="panel panel-primary" style="margin-bottom: -1px;">
+                    <div class="panel-heading" style="height: 41px; padding-left:2px;font-weight: bold;">
+                        <h3 class="panel-title pull-right"><button type="button" style="opacity: inherit;color: #fff;" class="close" data-dismiss="modal">&times;</button></h3>
+                        <ul class="nav panel-tabs" style="width:400px">
+                            <li class="active"><a data-event="true" style="margin-top:1px;color: black;" data-toggle="tab"><b><i class="fa fa-list-alt" aria-hidden="true"></i> Estados </b></a></li>
+                        </ul>
+                    </div>
+                    <div id="body" class="modal-body" style="padding: 33px 0px 0px 0px;">
+                        <div class="container-fluid">
+                            <div class="d-flex align-items-start">
+                                <div class="@Helper.Input2">
+                                    @Html.Label("idEstado", "Código")
+                                    @Html.TextBox("idEstado", null, new { @class = "form-control", disabled = true })
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-start">
+                                <div class="@Helper.Input12">
+                                    @Html.Label("nmEstado", "Estado", new { @class = "required" })
+                                    @Html.TextBox("nmEstado", null, new { @class = "form-control", maxlength = "50", style = "text-transform:uppercase" })
+                                    @Html.ValidationMessage("nmEstado", null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-start">
+                                <div class="@Helper.Input3">
+                                    @Html.Label("uf", "UF", new { @class = "required" })
+                                    @Html.TextBox("uf", null, new { @class = "form-control", maxlength = "3", style = "text-transform:uppercase" })
+                                    @Html.ValidationMessage("uf", null, new { @class = "text-danger" })
+                                </div>
+
+                                @Html.EditorFor(model => Pais, "Pais/select", new { disabled = false, classForm = Helper.Input6 })
+                            </div>
+
+                            <div class="d-flex align-items-start">
+                                <div class="@Helper.Input3">
+                                    @Html.Label("dtcadastro", "Data de cadastro", new { })
+                                    @Html.TextBox("dtcadastro", null, new { @class = "form-control", disabled = true })
+                                </div>
+
+                                <div class="@Helper.Input3 ">
+                                    @Html.Label("dtultalteracao", "Data de atualização", new { })
+                                    @Html.TextBox("dtultalteracao", null, new { @class = "form-control", disabled = true })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div style="text-align:right">
+                    <button id="@Helper.getInputId("btnSave", Prefix)" onclick="OpenModalCreateEstado()" type="button" class="btn btn-success"><i class="fa fa-save"></i>  Salvar</button>
+                    <button id="@Helper.getInputId("FecharCreate", Prefix)" onclick="FecharModalCreateEstado()" type="button" class="btn btn-danger"><i class="fa fa-ban"></i>  Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.AddScriptBlock(
+@<script type="text/javascript">
+    self = this;
+    $(function () {
+        document.getElementById("@Pratica_Profissional.Util.Class.Helper.getInputId("text", Prefix)").readOnly = true;
+
+         $("#@Helper.getInputId("btn-localizar", Prefix)").on("click", function () {
+             InitModalEstados();
+         });
+
+         $('#@Helper.getInputId("btnSave", Prefix)').on('click', function () {
+             self.saveEstado();
+         });
+
+        $('#@Helper.getInputId("idEstado", Prefix)').change(function (data, e) {
+             var id = $('#@Helper.getInputId("idEstado", Prefix)').val();
+             if (id == "") {
+                 $("#@Helper.getInputId("idEstado", Prefix)").val("");
+                 $("#@Helper.getInputId("text", Prefix)").val("");
+             } else {
+                 $.ajax({
+                     dataType: 'json',
+                     type: 'GET',
+                     url: '@Url.Action("JsDetails", "Estado")',
+                     data: { 'id': id },
+                     success: function (data) {
+                         if (!data) {
+                             $.notify({ message: 'Nenhum registro encontrado para o código informado', icon: 'fa fa-exclamation' }, { type: 'danger' } );
+                         }
+                         $("#@Helper.getInputId("id", Prefix)").val(data.id);
+                         $("#@Helper.getInputId("text", Prefix)").val(data.text);
+                     },
+                     error: function (err) {
+                         alert(err);
+                         alert("Erro ao buscar registro");
+                     }
+                 });
+             }
+         });
+     });
+
+    this.getFormEstado = function() {
+        var form = {
+                idEstado : $('#@Pratica_Profissional.Util.Class.Helper.getInputId("idEstado", Prefix)'),
+                nmEstado: $('#@Pratica_Profissional.Util.Class.Helper.getInputId("nmEstado", Prefix)'),
+                uf: $('#@Pratica_Profissional.Util.Class.Helper.getInputId("uf", Prefix)'),
+                dtCadastro: $('#@Pratica_Profissional.Util.Class.Helper.getInputId("dtCadastro", Prefix)'),
+                dtUltAlteracao: $('#@Pratica_Profissional.Util.Class.Helper.getInputId("dtultalteracao", Prefix)'),
+        }
+        return form;
+    };
+
+    this.clearEstado = function () {
+        var form = self.getFormEstado();
+        form.nmEstado.val("");
+        form.uf.val("");
+        form.dtCadastro.val("");
+        form.dtUltAlteracao.val("");
+        form.nmEstado.focus();
+        $("#Estado_Pais_idPais").val("")
+        $("#Estado_Pais_text").val("")
+        $("#cidade_Estado_Pais_idPais").val("")
+        $("#cidade_Estado_Pais_text").val("")
+    };
+
+    this.isValidEstado = function () {
+        var valid = true;
+        var form = self.getFormEstado();
+
+        if (IsNullOrEmpty(form.nmEstado.val())) {
+            form.nmEstado.blink({ msg: "Campo estado é obrigatório" });
+            form.nmEstado.focus();
+            valid = false;
+        }
+
+        else if (IsNullOrEmpty(form.uf.val())) {
+            form.uf.blink({ msg: "Campo UF é obrigatório" });
+            form.uf.focus();
+            valid = false;
+        }
+        return valid;
+    };
+
+    getModelEstado = function (form) {
+        var model = {
+            idEstado: form.idEstado.val(),
+            nmEstado: form.nmEstado.val(),
+            uf: form.uf.val(),
+            idPais: $("#Estado_Pais_idPais").val() > 0 ? $("#Estado_Pais_idPais").val() : $("#cidade_Estado_Pais_idPais").val(),
+        }
+        return model;
+    };
+
+    this.saveEstado = function () {
+        if ($('#@Pratica_Profissional.Util.Class.Helper.getInputId("isEdit", Prefix)').val() == "S") {
+            this.updateEstado();
+        } else {
+            this.insertEstado();
+        }
+    }
+
+    this.insertEstado = function () {
+           var form = self.getFormEstado();
+           var model = getModelEstado(form);
+           if (self.isValidEstado(model)) {
+
+            $.ajax({
+                dataType: 'json',
+                type: 'POST',
+                url: '@Url.Action("JsCreate", "Estado")',
+                data: model,
+                success: function (data) {
+                    self.clearEstado();
+                    self.InitModalEstados();
+                    $("#@Pratica_Profissional.Util.Class.Helper.getInputId("ModalCreate", Prefix)").modal("hide");
+                    $("#@Pratica_Profissional.Util.Class.Helper.getInputId("ModalLista", Prefix)").css("overflow", "auto");
+                    $.notify({ message: data.message, icon: 'fa fa-exclamation' }, { type: 'success', z_index: 2000, });
+
+                },
+                error: function (request) {
+                    alert("Erro ao adicionar registro")
+                }
+            });
+        }
+    };
+
+    this.updateEstado = function () {
+        var form = self.getFormEstado();
+        var model = getModelEstado(form);
+        if (self.isValidEstado(model)) {
+            $.ajax({
+                dataType: 'json',
+                type: 'POST',
+                url: '@Url.Action("jsUpdate", "Estado")',
+                data: model,
+                success: function (data) {
+                    self.clearEstado();
+                    InitModalEstados();
+                    $("#@Pratica_Profissional.Util.Class.Helper.getInputId("ModalCreate", Prefix)").modal("hide");
+                    $("#@Pratica_Profissional.Util.Class.Helper.getInputId("ModalLista", Prefix)").css("overflow", "auto");
+                    $.notify({ message: data.message, icon: 'fa fa-exclamation' }, { type: 'success', z_index: 2000, });
+                },
+            });
+        }
+    };
+
+    function InitModalEstados() {
+        $("#TableEstado").empty();
+        let tableEstado = null
+        let lis = getTableEstados();
+        $("#TableEstado").append(lis);
+
+        tableEstado = $('#listaEstado').DataTable({
+            ajax: { url: $('#listaEstado').attr('data-url') },
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese-Brasil.json',
+            },
+            columns: [
+                {
+                    sortable: false,
+                    data: null,
+                    sClass: 'details-control',
+                    mRender: function (data) {
+                        return '<a class="btn btn-warning btn-sm" data-event="item" title="Selecionar registro"><i class="fa fa-check"></i> </a>';
+                    }
+                },
+                {
+                    sortable: false,
+                    data: null,
+                    mRender: function (data) {
+                        return '<a class="btn btn-info btn-sm" onclick="OpenEditEstado(' + data.id + ')" title="Alterar registro"><i class="fa fa-edit"></i> </a>';
+                    }
+                },
+
+                { data: "id" },
+                { data: "text" }
+
+            ],
+        });
+        $("#@Pratica_Profissional.Util.Class.Helper.getInputId("ModalLista", Prefix)").modal("show");
+
+        $('#listaEstado tbody').on('click', 'td.details-control', function () {
+            var tr = $(this).closest('tr');
+            var row = tableEstado.row(tr);
+            row.child(SelectEstado(row.data())).show();
+            tr.addClass('shown');
+            $('div.slider', row.child()).slideDown();
+        });
+      }
+    function getTableEstados() {
+        let tmp = `<table id="listaEstado" class="table table-striped table-bordered" style="width:100%" data-url="@Url.Action("JsQuery", "Estado")">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th export="true" style="width:10%">Código</th>
+                                <th export="true" style="width:90%">Nome</th>
+                            </tr>
+                        </thead>
+                   </table>`;
+          return tmp;
+    };
+
+    function FecharModalEstado() {
+        $("#@Pratica_Profissional.Util.Class.Helper.getInputId("ModalLista", Prefix)").modal("hide");
+    };
+    function FecharModalCreateEstado() {
+        $("#@Pratica_Profissional.Util.Class.Helper.getInputId("ModalCreate", Prefix)").css("overflow", "hidden");
+        $("#@Pratica_Profissional.Util.Class.Helper.getInputId("ModalCreate", Prefix)").modal("hide");
+        $("#@Pratica_Profissional.Util.Class.Helper.getInputId("ModalLista", Prefix)").css("overflow", "auto");
+        self.clearEstado();
+    };
+
+    function OpenModalCreateEstado() {
+        $("#@Pratica_Profissional.Util.Class.Helper.getInputId("btnUpdate", Prefix)").hide();
+        $("#@Pratica_Profissional.Util.Class.Helper.getInputId("ModalLista", Prefix)").css("overflow", "hidden");
+        $("#@Pratica_Profissional.Util.Class.Helper.getInputId("ModalCreate", Prefix)").css("overflow", "auto");
+        $("#@Pratica_Profissional.Util.Class.Helper.getInputId("ModalCreate", Prefix)").modal("show");
+        $("#@Pratica_Profissional.Util.Class.Helper.getInputId("isEdit", Prefix)").val("N");
+        if ($("#@Pratica_Profissional.Util.Class.Helper.getInputId("isEdit", Prefix)").val() == "N") {
+            $(".isEdit").hide();
+        }
+    };
+
+    function SelectEstado(data) {
+        $("#@Pratica_Profissional.Util.Class.Helper.getInputId("ModalLista", Prefix)").modal("hide");
+        $("#@Pratica_Profissional.Util.Class.Helper.getInputId("idEstado", Prefix)").val(data.id);
+        $("#@Pratica_Profissional.Util.Class.Helper.getInputId("text", Prefix)").val(data.text);
+        return false;
+    }
+''
+     function OpenEditEstado(id) {
+        $.ajax({
+            dataType: 'json',
+            type: 'GET',
+            url: '@Url.Action("JsDetails", "Estado")',
+            data: { 'id': id },
+            success: function (data) {
+                self.clearEstado();
+                $("#@Pratica_Profissional.Util.Class.Helper.getInputId("ModalCreate", Prefix)").css("overflow", "auto");
+                $("#@Pratica_Profissional.Util.Class.Helper.getInputId("ModalCreate", Prefix)").modal("show");
+                $("#@Pratica_Profissional.Util.Class.Helper.getInputId("isEdit", Prefix)").val("S");
+                if ($("#@Pratica_Profissional.Util.Class.Helper.getInputId("isEdit", Prefix)").val() == "S") {
+                    $(".isEdit").show();
+                }
+                $("#@Pratica_Profissional.Util.Class.Helper.getInputId("idEstado", Prefix)").val(data.id);
+                $("#@Pratica_Profissional.Util.Class.Helper.getInputId("nmEstado", Prefix)").val(data.text);
+                $("#@Pratica_Profissional.Util.Class.Helper.getInputId("uf", Prefix)").val(data.uf);
+                $("#@Pratica_Profissional.Util.Class.Helper.getInputId("dtCadastro", Prefix)").val(data.dtCadastro);
+                $("#@Pratica_Profissional.Util.Class.Helper.getInputId("dtUltAlteracao", Prefix)").val(data.dtUltAlteracao);
+                $("#@Pratica_Profissional.Util.Class.Helper.getInputId("ModalLista", Prefix)").css("overflow", "auto");
+            },
+            error: function (request) {
+                alert("Erro ao buscar registro");
+            }
+        });
+        return false;
+    }
+</script>
+
+)

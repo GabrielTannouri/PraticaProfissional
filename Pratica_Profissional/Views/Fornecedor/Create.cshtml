@@ -1,0 +1,28 @@
+﻿@using Pratica_Profissional.Util.Class;
+@model Pratica_Profissional.ViewModel.FornecedorVM
+
+@{
+    ViewBag.Title = "Novo registro";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.readOnly = false;
+
+}
+
+@using (Html.BeginForm())
+{
+    <nav aria-label="breadcrumb" style="margin-top:10px;">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index")"><i class="fa fa-list"></i> Lista de fornecedores</a></li>
+            <li class="breadcrumb-item active"><i class="fa fa-plus" style="margin-top:3px; margin-right:5px"></i> Adicionar fornecedor</li>
+        </ol>
+    </nav>
+
+    <div class="form-horizontal">
+        <div class="card" style="padding-bottom:16px">
+            <h3 class="card-header" style="background-color:lightblue">Cadastro de fornecedor</h3>
+            @Html.Partial("Form", Model)
+        </div>
+    </div>
+
+}
+<script src="~/Scripts/Cliente/Create.js"></script>

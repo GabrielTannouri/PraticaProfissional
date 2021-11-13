@@ -1,0 +1,39 @@
+﻿@model Pratica_Profissional.ViewModel.CompraVM
+
+@{
+    ViewBag.Title = "Delete";
+    ViewBag.readOnly = true;
+}
+
+@using (Html.BeginForm())
+{
+    <nav aria-label="breadcrumb" style="margin-top:10px;">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index")"><i class="fa fa-list"></i> Lista de países</a></li>
+            <li class="breadcrumb-item active"><i class="fa fa-trash" style="margin-top:3px; margin-right:5px"></i> Remover país</li>
+        </ol>
+    </nav>
+
+    <div class="form-horizontal">
+        <div class="card" style="padding-bottom:16px">
+            <h3 class="card-header" style="background-color:lightblue">Cancelar compra</h3>
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="p-3 mb-2 bg-danger text-white">
+                        Deseja realmente cancelar esta compra?
+                    </div>
+                    <button>teste</button>
+                </div>
+            </div>
+            @Html.Partial("Form", Model)
+        </div>
+    </div>
+}
+<script src="~/Scripts/Util.js"></script>
+<script src="~/Scripts/Compra/Details.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $(".form-control").attr("disabled", true);
+    })
+</script>
+

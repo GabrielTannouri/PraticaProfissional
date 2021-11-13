@@ -1,0 +1,27 @@
+﻿@using Pratica_Profissional.Util.Class;
+@using Pratica_Profissional.Util
+@model Pratica_Profissional.ViewModel.CategoriaVM
+
+@{
+    ViewBag.Title = "Edit";
+    ViewBag.readOnly = true;
+}
+@using (Html.BeginForm())
+{
+    @Html.RenderFlashMessage()
+    @Html.CustomValidationSummary(true, true, "Ocorreram alguns erros, por favor verifique!!", new { @class = "alert alert-danger", role = "alert" })
+    <nav aria-label="breadcrumb" style="margin-top:10px;">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index")"><i class="fa fa-list"></i> Lista de categorias</a></li>
+            <li class="breadcrumb-item active"><i class="fa fa-pencil-square-o" style="margin-top:3px; margin-right:5px"></i> Editar categoria</li>
+        </ol>
+    </nav>
+
+    <div class="form-horizontal">
+        <div class="card" style="padding-bottom:16px">
+            <h3 class="card-header" style="background-color:lightblue">Editar categoria</h3>
+            @Html.Partial("Form", Model)
+        </div>
+    </div>
+
+}

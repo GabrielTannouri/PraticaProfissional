@@ -1,0 +1,211 @@
+﻿@using Pratica_Profissional.Util.Class;
+@model Pratica_Profissional.ViewModel.FornecedorVM
+
+@{
+    var action = ViewContext.Controller.ValueProvider.GetValue("action").RawValue.ToString().ToLower();
+    bool readOnly = Convert.ToBoolean(ViewBag.ReadOnly);
+    var pais = new Pratica_Profissional.ViewModel.PaisVM();
+}
+
+@Html.AntiForgeryToken()
+
+<h6 class="card-header">Informações pessoais</h6>
+
+<div class="card-body">
+    @if (action != "create")
+    {
+        <div class="form-group">
+            <div class="form-row">
+                <div class="@Helper.Input2">
+                    @Html.LabelFor(model => model.idFornecedor, "ID", new { @class = Helper.LabelTop })
+                    @Html.TextBoxFor(model => model.idFornecedor, new { @class = "form-control", disabled = "disabled" })
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="form-group">
+        <div class="form-row">
+            @if (action == "create")
+            {
+                <div class="@Helper.Input2">
+                    @Html.LabelFor(model => model.flTipo, "Tipo", new { @class = "required" })
+                    @Html.DropDownListFor(model => model.flTipo, Pratica_Profissional.ViewModel.FornecedorVM.Tipo, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.flTipo, null, new { @class = "text-danger" })
+                </div>
+            }
+            else
+            {
+                <div class="@Helper.Input2">
+                    @Html.LabelFor(model => model.flTipo, "Tipo", new { @class = "required" })
+                    @Html.TextBoxFor(model => model.dsTipo, new { @class = "form-control", disabled = true })
+                    @Html.HiddenFor(model => model.flTipo)
+                    @*@Html.DropDownListFor(model => model.tipo, Sistema.Models.Clientes.Tipo, new { @class = "form-control", disabled = true })*@
+                </div>
+            }
+
+            <div class="@Helper.Input5">
+                @Html.LabelFor(model => model.nmFornecedor, "Razão social", new { @class = "required" })
+                @Html.TextBoxFor(model => model.nmFornecedor, new { @class = "form-control text", maxlength = "50" })
+                @Html.ValidationMessageFor(model => model.nmFornecedor, null, new { @class = "text-danger" })
+            </div>
+
+            <div class="@Helper.Input5" id="divNmApelido">
+                @Html.LabelFor(model => model.nmApelido, "Apelido", new { @class = Helper.LabelTop })
+                @Html.TextBoxFor(model => model.nmApelido, new { @class = "form-control text", maxlength = "50" })
+            </div>
+
+            <div class="@Helper.Input5" id="divNmFantasia">
+                @Html.LabelFor(model => model.nmFantasia, "Nome fantasia", new { @class = Helper.LabelTop })
+                @Html.TextBoxFor(model => model.nmFantasia, new { @class = "form-control text", maxlength = "50" })
+            </div>
+        </div>
+    </div>
+</div>
+
+<h6 class="card-header">Informações endereço</h6>
+<div class="card-body">
+    <div class="form-group">
+        <div class="form-row">
+            <div class="@Helper.Input3">
+                @Html.LabelFor(model => model.cep, "CEP", new { @class = "required" })
+                @Html.TextBoxFor(model => model.cep, new { @class = "form-control", maxlength = "50", @id = "cep" })
+                @Html.ValidationMessageFor(model => model.cep, null, new { @class = "text-danger" })
+            </div>
+
+            <div class="@Helper.Input5">
+                @Html.LabelFor(model => model.endereco, "Logradouro", new { @class = "required" })
+                @Html.TextBoxFor(model => model.endereco, new { @class = "form-control text", maxlength = "50" })
+                @Html.ValidationMessageFor(model => model.endereco, null, new { @class = "text-danger" })
+            </div>
+
+            <div class="@Helper.Input4">
+                @Html.LabelFor(model => model.bairro, "Bairro", new { @class = "required" })
+                @Html.TextBoxFor(model => model.bairro, new { @class = "form-control text", maxlength = "50" })
+                @Html.ValidationMessageFor(model => model.bairro, null, new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="form-row">
+            <div class="@Helper.Input3">
+                @Html.LabelFor(model => model.nrEndereco, "Número", new { @class = "required" })
+                @Html.TextBoxFor(model => model.nrEndereco, new { @class = "form-control", maxlength = "50" })
+                @Html.ValidationMessageFor(model => model.nrEndereco, null, new { @class = "text-danger" })
+            </div>
+
+            <div class="@Helper.Input5">
+                @Html.LabelFor(model => model.complemento, "Complemento", new { @class = Helper.LabelTop })
+                @Html.TextBoxFor(model => model.complemento, new { @class = "form-control text", maxlength = "50" })
+            </div>
+
+            @Html.EditorFor(u => u.cidade, "Cidade/select", new { disabled = false })
+        </div>
+    </div>
+
+</div>
+
+<h6 class="card-header">Informações adicionais</h6>
+<div class="card-body">
+
+    <div class="form-group">
+        <div class="form-row">
+            <div class="@Helper.Input6">
+                @Html.LabelFor(model => model.email, "E-mail", new { @class = Helper.LabelTop })
+                @Html.TextBoxFor(model => model.email, new { @class = "form-control", maxlength = "50", @id = "email" })
+            </div>
+
+            <div class="@Helper.Input3">
+                @Html.LabelFor(model => model.nrTel, "Telefone", new { @class = "required" })
+                @Html.TextBoxFor(model => model.nrTel, new { @class = "form-control", maxlength = "50", @id = "tel" })
+                @Html.ValidationMessageFor(model => model.nrTel, null, new { @class = "text-danger" })
+            </div>
+
+            <div class="@Helper.Input3">
+                @Html.LabelFor(model => model.nrCel, "WhatsApp", new { @class = "required" })
+                @Html.TextBoxFor(model => model.nrCel, new { @class = "form-control", maxlength = "50", @id = "cel" })
+                @Html.ValidationMessageFor(model => model.nrCel, null, new { @class = "text-danger" })
+            </div>
+        </div>
+        <br />
+
+        <div class="form-group">
+            <div class="form-row">
+                <div class="@Helper.Input3" id="divCPF">
+                    @Html.LabelFor(model => model.cpf, "CPF", new { @class = "required" })
+                    @Html.TextBoxFor(model => model.cpf, new { @class = "form-control", @id = "cpf" })
+                    @Html.ValidationMessageFor(model => model.cpf, null, new { @class = "text-danger" })
+                </div>
+
+                <div class="@Helper.Input3" id="divCNPJ">
+                    @Html.LabelFor(model => model.cnpj, "CNPJ", new { @class = "required" })
+                    @Html.TextBoxFor(model => model.cnpj, new { @class = "form-control", @id = "cnpj" })
+                    @Html.ValidationMessageFor(model => model.cnpj, null, new { @class = "text-danger" })
+                </div>
+
+                <div class="@Helper.Input3" id="divRG">
+                    @Html.LabelFor(model => model.rg, "RG", new { @class = Helper.LabelTop })
+                    @Html.TextBoxFor(model => model.rg, new { @class = "form-control" })
+                </div>
+
+                <div class="@Helper.Input3" id="divInscricao">
+                    @Html.LabelFor(model => model.inscricaoEstadual, "Inscrição estadual", new { @class = Helper.LabelTop })
+                    @Html.TextBoxFor(model => model.inscricaoEstadual, new { @class = "form-control" })
+                </div>
+
+                <div class="@Helper.Input6">
+                    @Html.LabelFor(model => model.site, "Site", new { @class = Helper.LabelTop })
+                    @Html.TextBoxFor(model => model.site, new { @class = "form-control", maxlength = "50", @id = "cep" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-row">
+
+                <div class="@Helper.Input12">
+                    @Html.LabelFor(model => model.dsObservacao, "Observações", new { @class = Helper.LabelTop })
+                    @Html.TextAreaFor(model => model.dsObservacao, new { @class = "form-control text" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-row">
+                @Html.EditorFor(u => u.condicaoPagamento, "CondicaoPagamento/select", new { disabled = false })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-row">
+                <div class="@Helper.Input3">
+                    @Html.LabelFor(model => model.limiteCredito, "Limite de crédito (R$)", new { @class = Helper.LabelTop })
+                    @Html.TextBoxFor(model => model.limiteCredito, new { @class = "form-control currency", maxlength = "10" })
+                </div>
+
+                <div class="@Helper.Input3">
+                    @Html.LabelFor(model => model.dtCadastro, "Data de cadastro", new { @class = Helper.LabelTop })
+                    @Html.TextBoxFor(model => model.dtCadastro, new { @class = "form-control", disabled = "disabled" })
+                </div>
+
+                <div class="@Helper.Input3">
+                    @Html.LabelFor(model => model.dtAtualizacao, "Última atualização", new { @class = Helper.LabelTop })
+                    @Html.TextBoxFor(model => model.dtAtualizacao, new { @class = "form-control", disabled = "disabled" })
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="d-flex justify-content-end" style="padding-right:33px">
+    <button type="button" style="margin-right:10px" class="btn btn-primary" onclick="location.href='@Url.Action("Index", "Fornecedor")'">Sair</button>
+    @if ((action != "details") && (action != "delete"))
+    {
+        <button type="submit" class="btn btn-success">Salvar</button>
+    }
+    @if (action == "delete")
+    {
+        <button type="submit" class="btn btn-danger">Remover</button>
+    }
+
+</div>
