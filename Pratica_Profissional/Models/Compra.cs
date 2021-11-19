@@ -10,7 +10,7 @@ namespace Pratica_Profissional.Models
         public string serieNota { get; set; }
         public int nrNota { get; set; }
         public int idFornecedor { get; set; }
-        public int idCondPagamento { get; set; }
+        public int? idCondPagamento { get; set; }
         public DateTime dtEmissao { get; set; }
         public DateTime? dtEntrega { get; set; }
         public decimal vlFrete { get; set; }

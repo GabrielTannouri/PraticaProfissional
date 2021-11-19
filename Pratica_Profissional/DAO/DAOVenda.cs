@@ -17,128 +17,214 @@ namespace Pratica_Profissional.DAO
 
             return "";
         }
-        //public bool Create(Venda venda)
-        //{
-        //    AbrirConexao();
-        //    SqlCommand comando1 = con.CreateCommand();
-        //    SqlCommand comando2 = con.CreateCommand();
-        //    SqlCommand comando3 = con.CreateCommand();
-        //    SqlCommand comando4 = con.CreateCommand();
 
-        //    comando1.CommandText = "INSERT INTO tbOrdensServico (dtsituacao, idfuncionario, idcliente, idproduto, idcondicaoPagamento, dsproduto, dsproblema," +
-        //            "vldesconto, vltotal, flsituacao, dtcadastro, dtatualizacao) VALUES " +
-        //            "(@dtsituacao, @idfuncionario, @idcliente, @idproduto, @idcondicaoPagamento, @dsproduto, @dsproblema, @vldesconto, @vltotal, @flsituacao," +
-        //            "@dtcadastro, @dtatualizacao);SELECT CAST(SCOPE_IDENTITY() AS int)";
+        public bool Create(Venda venda, CondicaoPagamento condicaoPagamento)
+        {
+            AbrirConexao();
+            SqlCommand comando1 = con.CreateCommand();
+            SqlCommand comando2 = con.CreateCommand();
+            SqlCommand comando3 = con.CreateCommand();
+            SqlCommand comando4 = con.CreateCommand();
+            SqlCommand comando5 = con.CreateCommand();
+            SqlCommand comando6 = con.CreateCommand();
+            SqlCommand comando7 = con.CreateCommand();
 
-        //    comando2.CommandText = "INSERT INTO tbItensOrdemServico (idordemservico, idproduto, flunidade, qtproduto, vlunitario, dtcadastro, dtatualizacao) VALUES " +
-        //            "(@idordemservico, @idproduto, @flunidade, @qtproduto, @vlunitario, @dtcadastro, @dtatualizacao)";
+            //VENDA DE PRODUTOS
+            comando1.CommandText = "INSERT INTO tbVendas (modnota, serieNota, idcliente, idfuncionario, idordemservico, idcondicaopagamento, dtvenda," +
+                    "vltotal, vldesconto, dtcadastro, dtatualizacao, flsituacao) VALUES " +
+                    "(@modnota, @serieNota, @idcliente, @idfuncionario, @idordemservico, @idcondicaopagamento, @dtvenda, @vltotal, @vldesconto," +
+                    "@dtcadastro, @dtatualizacao, @flsituacao);SELECT CAST(SCOPE_IDENTITY() AS int)";
 
-        //    comando3.CommandText = "INSERT INTO tbServicosOrdemServico (idordemservico, idservico, idfuncionario, qtservico, vlservico, dtcadastro, dtatualizacao) VALUES " +
-        //            "(@idordemservico, @idservico, @idfuncionario, @qtservico, @vlservico, @dtcadastro, @dtatualizacao)";
+            comando2.CommandText = "INSERT INTO tbItensVenda (modnota, serieNota, nrnota, idcliente, idproduto, qtproduto, vlvenda, dtcadastro, dtatualizacao, flunidade) VALUES " +
+                    "(@modnota, @serieNota, @nrnota, @idcliente, @idproduto, @qtproduto, @vlvenda, @dtcadastro, @dtatualizacao, @flunidade)";
 
-        //    comando4.CommandText = "INSERT INTO tbHistoricoOrdemServico (idordemservico, flsituacao, dtsituacao, idfuncionario) VALUES " +
-        //            "(@idordemservico, @flsituacao, @dtsituacao, @idfuncionario)";
+            comando3.CommandText = "INSERT INTO tbContasReceber (modnota, serienota, nrnota, nrparcela, idcliente, idordemservico, idformapagamento, dtvencimento, vldesconto," +
+                    "vljuros, vlmulta, vlparcela, flsituacao) VALUES " +
+                    "(@modnota, @serienota, @nrnota, @nrparcela, @idcliente, @idordemservico, @idformapagamento, @dtvencimento, @vldesconto, @vljuros, @vlmulta, " +
+                    "@vlparcela, @flsituacao)";
 
-        //    using (con)
-        //    {
-        //        SqlTransaction sqlTrans = con.BeginTransaction();
+            comando4.CommandText = "UPDATE tbProdutos SET nrestoque=nrestoque-@nrEstoque WHERE idproduto=@idProduto";
 
-        //        try
-        //        {
-        //            comando1.Transaction = sqlTrans;
-        //            comando1.Parameters.AddWithValue("@dtsituacao", ordemServico.dtSituacao);
-        //            comando1.Parameters.AddWithValue("@idfuncionario", ordemServico.idFuncionario);
-        //            comando1.Parameters.AddWithValue("@idcliente", ordemServico.idCliente);
-        //            comando1.Parameters.AddWithValue("@idproduto", ordemServico.idProduto);
-        //            comando1.Parameters.AddWithValue("@idcondicaoPagamento", (object)ordemServico.idCondicaoPagamento ?? DBNull.Value);
-        //            comando1.Parameters.AddWithValue("@dsproduto", (object)ordemServico.dsProduto ?? DBNull.Value);
-        //            comando1.Parameters.AddWithValue("@dsproblema", (object)ordemServico.dsProblema ?? DBNull.Value);
-        //            comando1.Parameters.AddWithValue("@vldesconto", (object)ordemServico.vlDesconto ?? DBNull.Value);
-        //            comando1.Parameters.AddWithValue("@vltotal", ordemServico.vlTotal);
-        //            comando1.Parameters.AddWithValue("@flsituacao", ordemServico.flSituacao);
-        //            comando1.Parameters.AddWithValue("@dtcadastro", ordemServico.dtCadastro);
-        //            comando1.Parameters.AddWithValue("@dtatualizacao", ordemServico.dtAtualizacao);
-        //            Int32 idOrdemServico = Convert.ToInt32(comando1.ExecuteScalar());
+            //VENDA DE SERVIÇOS
+            comando5.CommandText = "INSERT INTO tbVendas (modnota, serieNota, idcliente, idfuncionario, idordemservico, idcondicaopagamento, dtvenda," +
+                    "vltotal, vldesconto, dtcadastro, dtatualizacao, flsituacao) VALUES " +
+                    "(@modnota, @serieNota, @idcliente, @idfuncionario, @idordemservico, @idcondicaopagamento, @dtvenda, @vltotal, @vldesconto," +
+                    "@dtcadastro, @dtatualizacao, @flsituacao);SELECT CAST(SCOPE_IDENTITY() AS int)";
 
+            comando6.CommandText = "INSERT INTO tbServicosVenda (modnota, serieNota, nrnota, idcliente, idservico, qtservico, vlservico, dtcadastro, dtatualizacao) VALUES " +
+                    "(@modnota, @serieNota, @nrnota, @idcliente, @idservico, @qtservico, @vlservico, @dtcadastro, @dtatualizacao)";
 
-        //            if (ordemServico.ItensOrdemServico.Count > 0)
-        //            {
-        //                comando2.Transaction = sqlTrans;
+            comando7.CommandText = "INSERT INTO tbContasReceber (modnota, serienota, nrnota, nrparcela, idcliente, idordemservico, idformapagamento, dtvencimento, vldesconto," +
+                   "vljuros, vlmulta, vlparcela, flsituacao) VALUES " +
+                   "(@modnota, @serienota, @nrnota, @nrparcela, @idcliente, @idordemservico, @idformapagamento, @dtvencimento, @vldesconto, @vljuros, @vlmulta, " +
+                   "@vlparcela, @flsituacao)";
 
-        //                foreach (var item in ordemServico.ItensOrdemServico)
-        //                {
-        //                    comando2.Parameters.Clear();
-        //                    comando2.Parameters.AddWithValue("@idordemservico", idOrdemServico);
-        //                    comando2.Parameters.AddWithValue("@idproduto", item.idProduto);
-        //                    comando2.Parameters.AddWithValue("@flunidade", item.flUnidade == "UNIDADE" ? "U" : "G");
-        //                    comando2.Parameters.AddWithValue("@qtproduto", item.qtProduto);
-        //                    comando2.Parameters.AddWithValue("@vlunitario", item.vlUnitario);
-        //                    comando2.Parameters.AddWithValue("@dtcadastro", ordemServico.dtCadastro);
-        //                    comando2.Parameters.AddWithValue("@dtatualizacao", ordemServico.dtAtualizacao);
-        //                    comando2.ExecuteNonQuery();
-        //                }
-        //            }
+            using (con)
+            {
+                SqlTransaction sqlTrans = con.BeginTransaction();
 
-        //            if (ordemServico.ServicosOrdemServico.Count > 0)
-        //            {
-        //                comando3.Transaction = sqlTrans;
+                try
+                {
+                    if (venda.ItensVenda.Count > 0)
+                    {
+                        comando1.Transaction = sqlTrans;
+                        comando1.Parameters.AddWithValue("@modnota", venda.modNota);
+                        comando1.Parameters.AddWithValue("@serieNota", venda.serieNota);
+                        comando1.Parameters.AddWithValue("@idcliente", venda.idCliente);
+                        comando1.Parameters.AddWithValue("@idfuncionario", venda.idFuncionario);
+                        comando1.Parameters.AddWithValue("@idordemservico", (object)venda.idOrdemServico ?? DBNull.Value);
+                        comando1.Parameters.AddWithValue("@idcondicaopagamento", venda.idCondPagamento);
+                        comando1.Parameters.AddWithValue("@dtvenda", venda.dtVenda);
+                        comando1.Parameters.AddWithValue("@vltotal", venda.vlTotal);
+                        comando1.Parameters.AddWithValue("@vldesconto", venda.vlDesconto);
+                        comando1.Parameters.AddWithValue("@dtcadastro", venda.dtCadastro);
+                        comando1.Parameters.AddWithValue("@dtatualizacao", venda.dtAtualizacao);
+                        comando1.Parameters.AddWithValue("@flsituacao", venda.flSituacao);
+                        Int32 nrnota = Convert.ToInt32(comando1.ExecuteScalar());
 
-        //                foreach (var item in ordemServico.ServicosOrdemServico)
-        //                {
-        //                    comando3.Parameters.Clear();
-        //                    comando3.Parameters.AddWithValue("@idordemservico", idOrdemServico);
-        //                    comando3.Parameters.AddWithValue("@idservico", item.idServico);
-        //                    comando3.Parameters.AddWithValue("@idfuncionario", item.idFuncionario);
-        //                    comando3.Parameters.AddWithValue("@qtservico", item.qtServico);
-        //                    comando3.Parameters.AddWithValue("@vlservico", item.vlUnitarioServico);
-        //                    comando3.Parameters.AddWithValue("@dtcadastro", ordemServico.dtCadastro);
-        //                    comando3.Parameters.AddWithValue("@dtatualizacao", ordemServico.dtAtualizacao);
-        //                    comando3.ExecuteNonQuery();
-        //                }
-        //            }
+                        comando2.Transaction = sqlTrans;
 
-        //            comando4.Transaction = sqlTrans;
-        //            comando4.Parameters.Clear();
-        //            comando4.Parameters.AddWithValue("@idordemservico", idOrdemServico);
-        //            comando4.Parameters.AddWithValue("@flsituacao", ordemServico.flSituacao);
-        //            comando4.Parameters.AddWithValue("@dtsituacao", ordemServico.dtSituacao);
-        //            comando4.Parameters.AddWithValue("@idfuncionario", ordemServico.idFuncionario);
-        //            comando4.ExecuteNonQuery();
-
-        //            sqlTrans.Commit();
-
-        //            return true;
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            sqlTrans.Rollback();
-        //            throw new Exception(ex.Message);
-        //        }
-        //        finally
-        //        {
-        //            FecharConexao();
-        //        }
-        //    }
-        //}
+                        foreach (var item in venda.ItensVenda)
+                        {
+                            comando2.Parameters.Clear();
+                            comando2.Parameters.AddWithValue("@modnota", venda.modNota);
+                            comando2.Parameters.AddWithValue("@serieNota", venda.serieNota);
+                            comando2.Parameters.AddWithValue("@nrnota", nrnota);
+                            comando2.Parameters.AddWithValue("@idcliente", venda.idCliente);
+                            comando2.Parameters.AddWithValue("@idproduto", item.idProduto);
+                            comando2.Parameters.AddWithValue("@qtproduto", item.qtProduto);
+                            comando2.Parameters.AddWithValue("@vlvenda", item.vlUnitario);
+                            comando2.Parameters.AddWithValue("@dtcadastro", venda.dtCadastro);
+                            comando2.Parameters.AddWithValue("@dtatualizacao", venda.dtAtualizacao);
+                            comando2.Parameters.AddWithValue("@flunidade", item.flUnidade == "UNIDADE" ? "U" : "G");
+                            comando2.ExecuteNonQuery();
+                        }
 
 
-        public List<OrdemServico> GetOrdemServicos()
+                        comando3.Transaction = sqlTrans;
+
+                        foreach (var item in venda.ParcelasVenda)
+                        {
+                            comando3.Parameters.Clear();
+                            comando3.Parameters.AddWithValue("@modnota", venda.modNota);
+                            comando3.Parameters.AddWithValue("@serienota", venda.serieNota);
+                            comando3.Parameters.AddWithValue("@nrnota", nrnota);
+                            comando3.Parameters.AddWithValue("@nrparcela", item.nrParcela);
+                            comando3.Parameters.AddWithValue("@idcliente", venda.idCliente);
+                            comando3.Parameters.AddWithValue("@idordemservico", (object)venda.idOrdemServico ?? DBNull.Value);
+                            comando3.Parameters.AddWithValue("@idformapagamento", item.idFormaPagamento);
+                            comando3.Parameters.AddWithValue("@dtvencimento", item.dtVencimento);
+                            comando3.Parameters.AddWithValue("@vldesconto", (object)condicaoPagamento.desconto ?? DBNull.Value);
+                            comando3.Parameters.AddWithValue("@vljuros", (object)condicaoPagamento.txJuros ?? DBNull.Value);
+                            comando3.Parameters.AddWithValue("@vlmulta", (object)condicaoPagamento.multa ?? DBNull.Value);
+                            comando3.Parameters.AddWithValue("@vlparcela", item.vlParcela);
+                            comando3.Parameters.AddWithValue("@flsituacao", "A");
+                            comando3.ExecuteNonQuery();
+                        }
+
+
+                        comando4.Transaction = sqlTrans;
+
+                        foreach (var item in venda.ItensVenda)
+                        {
+                            comando4.Parameters.Clear();
+                            comando4.Parameters.AddWithValue("@idProduto", item.idProduto);
+                            comando4.Parameters.AddWithValue("@nrestoque", item.qtProduto);
+                            comando4.ExecuteNonQuery();
+                        }
+                    }
+
+                    if (venda.ServicosVenda.Count > 0)
+                    {
+                        comando5.Transaction = sqlTrans;
+                        comando5.Parameters.Clear();
+                        comando5.Parameters.AddWithValue("@modnota", venda.modNotaServico);
+                        comando5.Parameters.AddWithValue("@serieNota", venda.serieNotaServico);
+                        comando5.Parameters.AddWithValue("@idcliente", venda.idCliente);
+                        comando5.Parameters.AddWithValue("@idfuncionario", venda.idFuncionario);
+                        comando5.Parameters.AddWithValue("@idordemservico", (object)venda.idOrdemServico ?? DBNull.Value);
+                        comando5.Parameters.AddWithValue("@idcondicaopagamento", venda.idCondPagamentoServico);
+                        comando5.Parameters.AddWithValue("@dtvenda", venda.dtVendaServico);
+                        comando5.Parameters.AddWithValue("@vltotal", venda.vlTotalServico);
+                        comando5.Parameters.AddWithValue("@vldesconto", venda.vlDescontoServico);
+                        comando5.Parameters.AddWithValue("@dtcadastro", venda.dtCadastro);
+                        comando5.Parameters.AddWithValue("@dtatualizacao", venda.dtAtualizacao);
+                        comando5.Parameters.AddWithValue("@flsituacao", venda.flSituacao);
+                        Int32 nrnotaServico = Convert.ToInt32(comando5.ExecuteScalar());
+
+                        comando6.Transaction = sqlTrans;
+                        foreach (var item in venda.ServicosVenda)
+                        {
+                            comando6.Parameters.Clear();
+                            comando6.Parameters.AddWithValue("@modnota", venda.modNotaServico);
+                            comando6.Parameters.AddWithValue("@serieNota", venda.serieNotaServico);
+                            comando6.Parameters.AddWithValue("@nrnota", nrnotaServico);
+                            comando6.Parameters.AddWithValue("@idcliente", venda.idCliente);
+                            comando6.Parameters.AddWithValue("@idservico", item.idServico);
+                            comando6.Parameters.AddWithValue("@qtservico", item.qtServico);
+                            comando6.Parameters.AddWithValue("@vlservico", item.vlUnitarioServico);
+                            comando6.Parameters.AddWithValue("@dtcadastro", venda.dtCadastro);
+                            comando6.Parameters.AddWithValue("@dtatualizacao", venda.dtAtualizacao);
+                            comando6.ExecuteNonQuery();
+                        }
+
+                        comando7.Transaction = sqlTrans;
+
+                        foreach (var item in venda.ParcelasVenda)
+                        {
+                            comando7.Parameters.Clear();
+                            comando7.Parameters.AddWithValue("@modnota", venda.modNotaServico);
+                            comando7.Parameters.AddWithValue("@serieNota", venda.serieNotaServico);
+                            comando7.Parameters.AddWithValue("@nrnota", nrnotaServico);
+                            comando7.Parameters.AddWithValue("@nrparcela", item.nrParcela);
+                            comando7.Parameters.AddWithValue("@idcliente", venda.idCliente);
+                            comando7.Parameters.AddWithValue("@idordemservico", (object)venda.idOrdemServico ?? DBNull.Value);
+                            comando7.Parameters.AddWithValue("@idformapagamento", item.idFormaPagamento);
+                            comando7.Parameters.AddWithValue("@dtvencimento", item.dtVencimento);
+                            comando7.Parameters.AddWithValue("@vldesconto", (object)condicaoPagamento.desconto ?? DBNull.Value);
+                            comando7.Parameters.AddWithValue("@vljuros", (object)condicaoPagamento.txJuros ?? DBNull.Value);
+                            comando7.Parameters.AddWithValue("@vlmulta", (object)condicaoPagamento.multa ?? DBNull.Value);
+                            comando7.Parameters.AddWithValue("@vlparcela", item.vlParcela);
+                            comando7.Parameters.AddWithValue("@flsituacao", "A");
+                            comando7.ExecuteNonQuery();
+                        }
+
+                    }
+                    sqlTrans.Commit();
+
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    sqlTrans.Rollback();
+                    throw new Exception(ex.Message);
+                }
+                finally
+                {
+                    FecharConexao();
+                }
+            }
+        }
+
+        public List<Venda> GetVendas()
         {
             try
             {
                 AbrirConexao();
-                SqlQuery = new SqlCommand("SELECT * FROM tbOrdensServico INNER JOIN tbClientes on tbOrdensServico.idcliente = tbClientes.idcliente " +
-                                                                        "INNER JOIN tbFuncionarios on tbOrdensServico.idfuncionario = tbFuncionarios.idfuncionario", con);
+                SqlQuery = new SqlCommand("SELECT * FROM tbVendas INNER JOIN tbClientes on tbVendas.idcliente = tbClientes.idcliente " +
+                                                                        "INNER JOIN tbFuncionarios on tbVendas.idfuncionario = tbFuncionarios.idfuncionario", con);
                 reader = SqlQuery.ExecuteReader();
 
-                var lista = new List<OrdemServico>();
+                var lista = new List<Venda>();
 
                 while (reader.Read())
                 {
-                    var ordemServico = new OrdemServico
+                    var venda = new Venda
                     {
-                        idOrdemServico = Convert.ToInt32(reader["idordemservico"]),
-                        dtSituacao = Convert.ToDateTime(reader["dtsituacao"]),
+                        modNota = Convert.ToString(reader["modnota"]),
+                        serieNota = Convert.ToString(reader["serienota"]),
+                        nrNota = Convert.ToInt32(reader["nrnota"]),
+                        dtVenda = Convert.ToDateTime(reader["dtvenda"]),
                         Cliente = new Cliente
                         {
                             idPessoa = Convert.ToInt32(reader["idcliente"]),
@@ -155,7 +241,7 @@ namespace Pratica_Profissional.DAO
                         dtAtualizacao = Convert.ToDateTime(reader["dtAtualizacao"]),
                     };
 
-                    lista.Add(ordemServico);
+                    lista.Add(venda);
                 }
 
                 return lista;
@@ -305,49 +391,6 @@ namespace Pratica_Profissional.DAO
 
         }
 
-        //public List<ContasReceber> GetParcelasByID(int idOrdemServico)
-        //{
-        //    try
-        //    {
-        //        AbrirConexao();
-        //        var _where = string.Empty;
-        //        _where = " WHERE A.modnota = '" + modNota + "' AND A.serienota  = '" + serieNota + "' AND A.nrnota  = " + nrNota + " AND A.idfornecedor =" + idFornecedor;
-        //        SqlQuery = new SqlCommand("SELECT * FROM tbServicosOrdemServico A INNER JOIN tbServicos B on A.idservico = B.idservico" + _where, con);
-        //        reader = SqlQuery.ExecuteReader();
-        //        List<ContasPagar> parcelas = new List<ContasPagar>();
-        //        while (reader.Read())
-        //        {
-        //            var obj = new ContasPagar()
-        //            {
-        //                modNota = Convert.ToString(reader["modnota"]),
-        //                serieNota = Convert.ToString(reader["serienota"]),
-        //                nrNota = Convert.ToInt32(reader["nrnota"]),
-        //                idFornecedor = Convert.ToInt32(reader["idfornecedor"]),
-        //                nrParcela = Convert.ToInt32(reader["nrparcela"]),
-        //                dtVencimento = Convert.ToDateTime(reader["dtvencimento"]),
-        //                flSituacao = Convert.ToString(reader["flsituacao"]),
-        //                vlDesconto = Convert.ToDecimal(reader["vldesconto"] != DBNull.Value ? reader["vldesconto"] : null),
-        //                vlJuros = Convert.ToDecimal(reader["vljuros"] != DBNull.Value ? reader["vljuros"] : null),
-        //                vlMulta = Convert.ToDecimal(reader["vlmulta"] != DBNull.Value ? reader["vlmulta"] : null),
-        //                vlPago = Convert.ToDecimal(reader["vlpago"] != DBNull.Value ? reader["vlpago"] : null),
-        //                dtPagamento = Convert.ToDateTime(reader["dtpagamento"] != DBNull.Value ? reader["dtpagamento"] : null),
-        //                vlParcela = Convert.ToDecimal(reader["vlparcela"]),
-        //                dtCadastro = Convert.ToDateTime(reader["dtcadastro"]),
-        //                dtAtualizacao = Convert.ToDateTime(reader["dtatualizacao"]),
-        //                idFormaPagamento = Convert.ToInt32(reader["idformapagamento"]),
-        //                nmFormaPagamento = Convert.ToString(reader["nmformapagamento"]),
-        //            };
-        //            parcelas.Add(obj);
-        //        }
-
-        //        return parcelas;
-        //    }
-        //    catch (Exception error)
-        //    {
-        //        throw new Exception(error.Message);
-        //    }
-
-        //}
 
         public List<HistoricoOrdemServico> GetHistorico(int idOrdemServico)
         {

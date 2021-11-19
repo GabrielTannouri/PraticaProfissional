@@ -150,13 +150,15 @@
             <div class="form-group">
                 <div class="form-row">
                     <div class="@Helper.Input3">
-                        @Html.Label("vlDesconto", "Desconto (R$)", new { @class = Helper.LabelTop })
-                        @Html.TextBox("vlDesconto", null, new { @class = "form-control taxa" })
+                        @Html.LabelFor(model => model.vlDesconto, "Desconto (R$)", new { @class = Helper.LabelTop })
+                        @Html.TextBoxFor(model => model.vlDesconto, new { @class = "form-control currency", @style = "text-align:right" })
+                        @Html.ValidationMessageFor(model => model.vlDesconto, null, new { @class = "text-danger" })
                     </div>
 
                     <div class="@Helper.Input3">
-                        @Html.Label("vlTotal", "Total (R$)", new { @class = Helper.LabelTop })
-                        @Html.TextBox("vlTotal", null, new { @class = "form-control taxa", disabled = true })
+                        @Html.LabelFor(model => model.vlTotal, "Total venda de produto (R$)", new { @class = Helper.LabelTop })
+                        @Html.TextBoxFor(model => model.vlTotal, new { @class = "form-control currency", @style = "text-align:right" })
+                        @Html.ValidationMessageFor(model => model.vlTotal, null, new { @class = "text-danger" })
                     </div>
                 </div>
             </div>
@@ -213,9 +215,202 @@
                 </div>
             }
         </div>
-        <div id="servico" class="tab-pane fade">
-            <h6 class="card-header">Histórico de situações da ordem de serviço</h6>
+    </div>
+    <div id="servico" class="tab-pane fade">
+        <h6 class="card-header">Informações</h6>
 
+        <div class="card-body">
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="@Helper.Input3">
+                        @Html.LabelFor(model => model.modNotaServico, "Modelo", new { @class = "required" })
+                        @Html.TextBoxFor(model => model.modNotaServico, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.modNotaServico, null, new { @class = "text-danger" })
+                    </div>
+
+                    <div class="@Helper.Input3">
+                        @Html.LabelFor(model => model.serieNotaServico, "Série", new { @class = "required" })
+                        @Html.TextBoxFor(model => model.serieNotaServico, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.serieNotaServico, null, new { @class = "text-danger" })
+                    </div>
+
+                    <div class="@Helper.Input3">
+                        @Html.LabelFor(model => model.nrNotaServico, "Número nota", new { @class = Helper.LabelTop })
+                        @Html.TextBoxFor(model => model.nrNotaServico, new { @class = "form-control", disabled = "disabled" })
+                    </div>
+
+                    <div class="@Helper.Input3">
+                        @Html.LabelFor(model => model.dtVendaServico, "Data venda", new { @class = "required" })
+                        @Html.TextBoxFor(model => model.dtVendaServico, new { @type = "date", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.dtVendaServico, null, new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    @Html.EditorFor(u => u.FuncionarioServico, "FuncionarioVenda/select", new { disabled = false })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    @Html.EditorFor(u => u.ClienteServico, "ClienteVenda/select", new { disabled = false })
+                </div>
+            </div>
+        </div>
+
+        <h6 class="card-header">Lista de serviços</h6>
+        <div class="card-body">
+            <div class="form-group">
+                <div class="form-row">
+                    @Html.EditorFor(u => u.Servico, "Servico/select", new { Label = "Serviço a ser realizado", disabled = false })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    @Html.EditorFor(u => u.FuncionarioExecutante, "FuncionarioExecutante/select", new { Label = "Funcionário executante", disabled = false })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="@Helper.Input2">
+                        @Html.Label("qtServico", "Quantidade", new { @class = Helper.LabelTop })
+                        @Html.TextBox("qtServico", null, new { @class = "form-control integer", @style = "text-align:right" })
+                    </div>
+
+                    <div class="@Helper.Input2">
+                        @Html.Label("vlUnitarioServico", "Valor unitário (R$)", new { @class = Helper.LabelTop })
+                        @Html.TextBox("vlUnitarioServico", null, new { @class = "form-control currency" })
+                    </div>
+
+                    <div class="@Helper.Input2">
+                        @Html.Label("vlTotalServico", "Total (R$)", new { @class = Helper.LabelTop })
+                        @Html.TextBox("vlTotalServico", null, new { @class = "form-control currency", disabled = true })
+                    </div>
+
+                    <div class="@Helper.Input3">
+                        @Html.Label("addServico", " ", new { @class = Helper.Label })
+                        <div class="@Helper.Input8" style="margin-top:7px;">
+                            <button id="addServico" role="button" class="btn btn-success"><i class="glyphicon glyphicon-plus-sign"></i> Adicionar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.HiddenFor(model => model.jsListServicosVenda)
+                <table id="tblServicos" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                        <tr>
+                            @if (action != "details" && action != "cancelar")
+                            {
+                                <th></th>
+                            }
+                            <th style="width:10%;text-align:right">Cód.</th>
+                            <th width="30%">Serviço</th>
+                            <th width="30%">Funcionário executante</th>
+                            <th style="width:10%;text-align:right">Quantidade</th>
+                            <th style="width:10%;text-align:right">Valor Unitário</th>
+                            <th style="width:10%;text-align:right">Total</th>
+                        </tr>
+                        @Html.ValidationMessageFor(model => model.ListServicosVenda, null, new { @class = "text-danger" })
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            @if (action == "details" || action == "cancelar")
+                            {
+                                <td colspan="5">
+                                    <span class="pull-right"><strong style="font-size:17px;">Total geral serviços (R$):</strong></span>
+                                </td>
+                            }
+                            else
+                            {
+                                <td colspan="6">
+                                    <span class="pull-right"><strong style="font-size:17px;">Total geral serviços (R$):</strong></span>
+                                </td>
+                            }
+
+                            <td style="background-color:#818787;color:#FFF">
+                                <span class="pull-right"><strong style="font-size:17px" id="vlTotalServicos"></strong></span>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        <h6 class="card-header">Valores da venda</h6>
+        <div class="card-body">
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="@Helper.Input3">
+                        @Html.LabelFor(model => model.vlDescontoServico, "Desconto (R$)", new { @class = Helper.LabelTop })
+                        @Html.TextBoxFor(model => model.vlDescontoServico, new { @class = "form-control currency", @style = "text-align:right" })
+                        @Html.ValidationMessageFor(model => model.vlDescontoServico, null, new { @class = "text-danger" })
+                    </div>
+
+                    <div class="@Helper.Input3">
+                        @Html.LabelFor(model => model.vlTotalVendaServicos, "Total venda de serviço (R$)", new { @class = Helper.LabelTop })
+                        @Html.TextBoxFor(model => model.vlTotalVendaServicos, new { @class = "form-control currency", @style = "text-align:right" })
+                        @Html.ValidationMessageFor(model => model.vlTotalVendaServicos, null, new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h6 class="card-header">Condição de pagamento</h6>
+        <div class="card-body">
+            @if (action != "details" && action != "cancelar")
+            {
+                <div class="form-group">
+                    <div class="form-row">
+                        @Html.EditorFor(u => u.CondicaoPagamentoServico, "CondicaoPagamentoVenda/select", new { disabled = false, classForm = Helper.Input10, classLabel = Helper.LabelXXS })
+
+                        <div class="@Helper.Input2">
+                            @Html.Label("gerarParcelasServico", " ", new { @class = Helper.Label })
+                            <div class="@Helper.Input12" style="margin-top:10px">
+                                <button id="gerarParcelasServico" role="button" class="btn btn-info"><i class="glyphicon glyphicon-plus-sign"></i> Gerar parcelas</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="form-group">
+                @Html.HiddenFor(model => model.jsListParcelaServico)
+                <table id="tblParcelasServico" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th style="width:10%;text-align:right">Parcela</th>
+                            <th width="50%">Forma pagamento</th>
+                            <th style="width:20%;text-align:right">Vencimento</th>
+                            <th style="width:20%;text-align:right">Valor</th>
+                        </tr>
+                        @Html.ValidationMessageFor(model => model.ListVendaParcelasServico, null, new { @class = "text-danger" })
+                    </thead>
+                </table>
+
+            </div>
+
+            @if (action != "create")
+            {
+                <div class="form-group">
+                    <div class="form-row">
+                        <div class="@Helper.Input3">
+                            @Html.LabelFor(model => model.dtCadastro, "Data de cadastro", new { @class = Helper.LabelTop })
+                            @Html.TextBoxFor(model => model.dtCadastro, new { @class = "form-control", disabled = "disabled" })
+                        </div>
+
+                        <div class="@Helper.Input3">
+                            @Html.LabelFor(model => model.dtAtualizacao, "Última atualização", new { @class = Helper.LabelTop })
+                            @Html.TextBoxFor(model => model.dtAtualizacao, new { @class = "form-control", disabled = "disabled" })
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
     </div>
 </div>

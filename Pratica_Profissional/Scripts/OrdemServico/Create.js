@@ -753,45 +753,47 @@
         };
 
         this.desabilitarDataTableProdutos = function (e, data) {
+            if (self.dtParcela.data.length > 0) {
+                let btn = $('td a[data-event=remove]', data.nRow);
+                btn.attr('title', "Não é possível remover!");
+                btn.attr('data-event', false);
+                btn.removeClass().addClass("btn btn-secondary btn-sm");
+                btn.find("i").removeClass().addClass("fa fa-exclamation-triangle");
+                btn.on('click', function (e) {
+                    e.preventDefault();
+                })
 
-            let btn = $('td a[data-event=remove]', data.nRow);
-            btn.attr('title', "Não é possível remover!");
-            btn.attr('data-event', false);
-            btn.removeClass().addClass("btn btn-secondary btn-sm");
-            btn.find("i").removeClass().addClass("fa fa-exclamation-triangle");
-            btn.on('click', function (e) {
-                e.preventDefault();
-            })
-
-            let btnEdit = $('td a[data-event=edit]', data.nRow);
-            btnEdit.attr('title', "Não é possível editar!");
-            btnEdit.attr('data-event', false);
-            btnEdit.removeClass().addClass("btn btn-secondary btn-sm").css("width", "29px");
-            btnEdit.find("i").removeClass().addClass("fa fa-exclamation-triangle");
-            btnEdit.click(function (e) {
-                e.preventDefault();
-            });
+                let btnEdit = $('td a[data-event=edit]', data.nRow);
+                btnEdit.attr('title', "Não é possível editar!");
+                btnEdit.attr('data-event', false);
+                btnEdit.removeClass().addClass("btn btn-secondary btn-sm").css("width", "29px");
+                btnEdit.find("i").removeClass().addClass("fa fa-exclamation-triangle");
+                btnEdit.click(function (e) {
+                    e.preventDefault();
+                });
+            }
         }
 
         this.desabilitarDataTableServicos = function (e, data) {
+            if (self.dtParcela.data.length > 0) {
+                let btn = $('td a[data-event=remove]', data.nRow);
+                btn.attr('title', "Não é possível remover!");
+                btn.attr('data-event', false);
+                btn.removeClass().addClass("btn btn-secondary btn-sm");
+                btn.find("i").removeClass().addClass("fa fa-exclamation-triangle");
+                btn.on('click', function (e) {
+                    e.preventDefault();
+                })
 
-            let btn = $('td a[data-event=remove]', data.nRow);
-            btn.attr('title', "Não é possível remover!");
-            btn.attr('data-event', false);
-            btn.removeClass().addClass("btn btn-secondary btn-sm");
-            btn.find("i").removeClass().addClass("fa fa-exclamation-triangle");
-            btn.on('click', function (e) {
-                e.preventDefault();
-            })
-
-            let btnEdit = $('td a[data-event=edit]', data.nRow);
-            btnEdit.attr('title', "Não é possível editar!");
-            btnEdit.attr('data-event', false);
-            btnEdit.removeClass().addClass("btn btn-secondary btn-sm").css("width", "29px");
-            btnEdit.find("i").removeClass().addClass("fa fa-exclamation-triangle");
-            btnEdit.click(function (e) {
-                e.preventDefault();
-            });
+                let btnEdit = $('td a[data-event=edit]', data.nRow);
+                btnEdit.attr('title', "Não é possível editar!");
+                btnEdit.attr('data-event', false);
+                btnEdit.removeClass().addClass("btn btn-secondary btn-sm").css("width", "29px");
+                btnEdit.find("i").removeClass().addClass("fa fa-exclamation-triangle");
+                btnEdit.click(function (e) {
+                    e.preventDefault();
+                });
+            }
         }
     }
 });

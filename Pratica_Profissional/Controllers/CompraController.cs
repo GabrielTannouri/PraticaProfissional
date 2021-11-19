@@ -219,43 +219,6 @@ namespace Pratica_Profissional.Controllers
             }
         }
 
-        //public JsonResult JsCreate(Pais pais)
-        //{
-        //    var dtAtual = DateTime.Today;
-        //    pais.dtCadastro = dtAtual;
-        //    pais.dtAtualizacao = dtAtual;
-        //    try
-        //    {
-        //        var daoPaises = new DAOPais();
-        //        daoPaises.Create(pais);
-        //        var result = new
-        //        {
-        //            type = "success",
-        //            message = "País adicionado",
-        //            model = pais
-        //        };
-        //        return Json(result, JsonRequestBehavior.AllowGet);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Response.StatusCode = 500;
-        //        return Json(ex.Message, JsonRequestBehavior.AllowGet);
-        //    }
-        //}
-
-        //public JsonResult JsUpdate(Pais model)
-        //{
-        //    var daoPaises = new DAOPais();
-        //    daoPaises.Edit(model);
-        //    var result = new
-        //    {
-        //        type = "success",
-        //        field = "",
-        //        message = "Registro alterado com sucesso!",
-        //        model = model
-        //    };
-        //    return Json(result, JsonRequestBehavior.AllowGet);
-        //}
 
         private IQueryable<dynamic> Find(int? id, string q)
         {

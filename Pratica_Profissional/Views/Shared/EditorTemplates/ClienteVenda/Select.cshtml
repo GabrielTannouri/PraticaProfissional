@@ -1,0 +1,380 @@
+﻿@model Pratica_Profissional.ViewModel.ClienteVM
+@using Pratica_Profissional.Util.Class;
+@{
+    bool Disabled = Convert.ToBoolean(ViewData["Disabled"]);
+    bool Required = Convert.ToBoolean(ViewData["Required"] ?? true);
+    bool OnlySelect = Convert.ToBoolean(ViewData["onlySelect"] ?? false);
+    bool LabelVertical = Convert.ToBoolean(ViewData["LabelVertical"]);
+    string Label = Convert.ToString(ViewData["Label"] ?? "Cliente");
+    string classLabel = Convert.ToString(ViewData["classLabel"] ?? Helper.Label);
+    string classForm = Convert.ToString(ViewData["classForm"] ?? Helper.Input12);
+    var Prefix = Html.ClientPrefixName().ToString(); ;
+}
+
+@Html.Hidden("isEdit")
+
+<div class="@classForm">
+    @Html.LabelFor(model => model.idCliente, Label, new { @class = "required" })
+    <div class="input-group">
+        @Html.TextBoxFor(model => model.idCliente, new { @style = "border-radius: 4px 0px 0px 4px; width: 15%;", @class = "form-control number", maxLength = "6" })
+        @Html.TextBoxFor(model => model.text, new { @class = "form-control", @style = "width:70%" })
+        <a style="border-radius:0px 3px 3px 0px" data-target="#@Pratica_Profissional.Util.Class.Helper.getInputId("Modal", Prefix)" id="@Pratica_Profissional.Util.Class.Helper.getInputId("btn-localizar", Prefix)" title="Abrir a busca de @Label" class="btn btn-primary" data-toggle="modal"><i class="fa fa-search"></i></a>
+        @Html.HiddenFor(k => k.text)
+    </div>
+    @Html.ValidationMessageFor(model => model.idCliente, null, new { @class = "text-danger" })
+</div>
+
+<div id="@Pratica_Profissional.Util.Class.Helper.getInputId("ModalLista", Prefix)" class="modal fade" data-backdrop="static" data-keyboard="false" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body no-padding">
+                <div class="panel panel-primary" style="margin-bottom: -1px;">
+                    <div class="panel-heading" style="height: 41px; padding-left:2px;font-weight: bold;">
+                        <h3 class="panel-title pull-right"><button type="button" style="opacity: inherit;color: #fff;" class="close" data-dismiss="modal">&times;</button></h3>
+                        <ul class="nav panel-tabs" style="width:400px">
+                            <li class="active"><a data-event="true" style="margin-top:1px;color: black;" data-toggle="tab"><b><i class="fa fa-list-alt" aria-hidden="true"></i> Clientes </b></a></li>
+                        </ul>
+                    </div>
+
+                    <div style="text-align:right">
+                        <button id="@Pratica_Profissional.Util.Class.Helper.getInputId("CreateClienteVenda", Prefix)" onclick="OpenModalCreateClienteVenda()" type="button" class="btn btn-success"> Adicionar</button>
+                    </div>
+                    <div style="padding: 33px 0px 0px 0px;">
+                        <div class="container-fluid">
+                            <div id="TableClienteVenda" style="width:100%"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div style="text-align:right">
+                            <button id="@Pratica_Profissional.Util.Class.Helper.getInputId("FecharClienteVenda", Prefix)" onclick="FecharModalClienteVenda()" type="button" class="btn btn-primary"> Voltar</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*<div id="@Pratica_Profissional.Util.Class.Helper.getInputId("ModalCreate", Prefix)" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body no-padding">
+                <div class="panel panel-primary" style="margin-bottom: -1px;">
+                    <div class="panel-heading" style="height: 41px; padding-left:2px;font-weight: bold;">
+                        <h3 class="panel-title pull-right"><button type="button" style="opacity: inherit;color: #fff;" class="close" data-dismiss="modal">&times;</button></h3>
+                        <ul class="nav panel-tabs" style="width:400px">
+                            <li class="active"><a data-event="true" style="margin-top:1px;color: black;" data-toggle="tab"><b><i class="fa fa-list-alt" aria-hidden="true"></i> Fornecedor </b></a></li>
+                        </ul>
+                    </div>
+                    <div id="body" class="modal-body" style="padding: 33px 0px 0px 0px;">
+                        <div class="container-fluid">
+
+                            <div class="d-flex align-items-start">
+                                <div class="@Helper.Input2">
+                                    @Html.Label("idPais", "Código")
+                                    @Html.TextBox("idPais", null, new { @class = "form-control", disabled = true })
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-start">
+                                <div class="@Helper.Input12">
+                                    @Html.Label("nmPais", "País", new { @class = "required" })
+                                    @Html.TextBox("nmPais", null, new { @class = "form-control", maxlength = "50", style = "text-transform:uppercase" })
+                                    @Html.ValidationMessage("nmPais", null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-start">
+                                <div class="@Helper.Input3">
+                                    @Html.Label("ddi", "DDI", new { @class = "required" })
+                                    @Html.TextBox("ddi", null, new { @class = "form-control", maxlength = "5", style = "text-transform:uppercase" })
+                                    @Html.ValidationMessage("nmPais", null, new { @class = "text-danger" })
+                                </div>
+
+
+                                <div class="@Helper.Input3">
+                                    @Html.Label("sigla", "Sigla", new { @class = "required" })
+                                    @Html.TextBox("sigla", null, new { @class = "form-control", maxlength = "3", style = "text-transform:uppercase" })
+                                    @Html.ValidationMessage("nmPais", null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-start">
+                                <div class="@Helper.Input3">
+                                    @Html.Label("dtcadastro", "Data de cadastro", new { })
+                                    @Html.TextBox("dtcadastro", null, new { @class = "form-control", disabled = true })
+                                </div>
+
+                                <div class="@Helper.Input3 ">
+                                    @Html.Label("dtultalteracao", "Data de atualização", new { })
+                                    @Html.TextBox("dtultalteracao", null, new { @class = "form-control", disabled = true })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div style="text-align:right">
+                    <button id="@Helper.getInputId("btnSavePais", Prefix)" onclick="OpenModalCreatePais()" type="button" class="btn btn-success"> Salvar</button>
+                    <button id="@Helper.getInputId("FecharCreatePais", Prefix)" onclick="FecharModalCreatePais()" type="button" class="btn btn-danger"> Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>*@
+@Html.AddScriptBlock(
+@<script type="text/javascript">
+    self = this;
+    $(function () {
+        document.getElementById("@Pratica_Profissional.Util.Class.Helper.getInputId("text", Prefix)").readOnly = true;
+
+         $("#@Pratica_Profissional.Util.Class.Helper.getInputId("btn-localizar", Prefix)").on("click", function () {
+             InitModalClienteVenda();
+         });
+         $('#@Pratica_Profissional.Util.Class.Helper.getInputId("btnSaveClienteVenda", Prefix)').on('click', function () {
+             self.saveClienteVenda();
+         });
+         $('#@Pratica_Profissional.Util.Class.Helper.getInputId("idCliente", Prefix)').change(function (data, e) {
+             var id = $('#@Pratica_Profissional.Util.Class.Helper.getInputId("idCliente", Prefix)').val();
+             if (id == "") {
+                 $("#@Pratica_Profissional.Util.Class.Helper.getInputId("idCliente", Prefix)").val("");
+                 $("#@Pratica_Profissional.Util.Class.Helper.getInputId("text", Prefix)").val("");
+             } else {
+                 $.ajax({
+                     dataType: 'json',
+                     type: 'GET',
+                     url: '@Url.Action("JsDetails", "Cliente")',
+                     data: { 'id': id },
+                     success: function (data) {
+                         if (!data) {
+                             $.notify({ message: 'Nenhum registro encontrado para o código informado', icon: 'fa fa-exclamation' }, { type: 'danger' } );
+                         }
+                         $("#@Pratica_Profissional.Util.Class.Helper.getInputId("id", Prefix)").val(data.id);
+                         $("#@Pratica_Profissional.Util.Class.Helper.getInputId("text", Prefix)").val(data.text);
+                     },
+                     error: function (err) {
+                         alert(err);
+                         alert("Erro ao buscar registro");
+                     }
+                 });
+             }
+         });
+     });
+    @*this.getFormPais = function() {
+        var form = {
+               idPais : $('#@Pratica_Profissional.Util.Class.Helper.getInputId("idPais", Prefix)'),
+               nmPais: $('#@Pratica_Profissional.Util.Class.Helper.getInputId("nmPais", Prefix)'),
+               ddi: $('#@Pratica_Profissional.Util.Class.Helper.getInputId("ddi", Prefix)'),
+               sigla: $('#@Pratica_Profissional.Util.Class.Helper.getInputId("sigla", Prefix)'),
+               dtCadastro: $('#@Pratica_Profissional.Util.Class.Helper.getInputId("dtCadastro", Prefix)'),
+               dtUltAlteracao: $('#@Pratica_Profissional.Util.Class.Helper.getInputId("dtultalteracao", Prefix)'),
+        }
+        return form;
+    };
+
+    this.clearPais = function () {
+        var form = self.getFormPais();
+        form.nmPais.val("");
+        form.ddi.val("");
+        form.sigla.val("");
+        form.dtCadastro.val("");
+        form.dtUltAlteracao.val("");
+        form.nmPais.focus();
+    };
+
+    this.isValidPais = function () {
+        var valid = true;
+        var form = self.getFormPais();
+
+        if (IsNullOrEmpty(form.nmPais.val())) {
+            form.nmPais.blink({ msg: "Por favor, informe o país!" });
+            form.nmPais.focus();
+            valid = false;
+        }
+
+        else if (IsNullOrEmpty(form.ddi.val())) {
+            form.ddi.blink({ msg: "Por favor, informe o DDI!" });
+            form.ddi.focus();
+            valid = false;
+        }
+
+        else if (IsNullOrEmpty(form.sigla.val())) {
+            form.sigla.blink({ msg: "Por favor, informe a sigla!" });
+            form.sigla.focus();
+            valid = false;
+        }
+        return valid;
+    };
+
+    getModelPais = function (form) {
+        var model = {
+            idPais: form.idPais.val(),
+            nmPais: form.nmPais.val(),
+            ddi: form.ddi.val(),
+            sigla: form.sigla.val(),
+        }
+        return model;
+    };
+
+   this.savePais = function () {
+           if ($('#@Pratica_Profissional.Util.Class.Helper.getInputId("isEdit", Prefix)').val() == "S") {
+               this.updatePais();
+           } else {
+               this.insertPais();
+           }
+    }
+
+    this.insertPais = function () {
+            var form = self.getFormPais();
+            var model = getModelPais(form);
+            if (self.isValidPais(model)) {
+
+                $.ajax({
+                    dataType: 'json',
+                    type: 'POST',
+                    url: '@Url.Action("JsCreate", "Pais")',
+                    data: model,
+                    success: function (data) {
+                        self.clearPais();
+                        InitModalPaises();
+                        $("#@Pratica_Profissional.Util.Class.Helper.getInputId("ModalCreate", Prefix)").modal("hide");
+                        $("#@Pratica_Profissional.Util.Class.Helper.getInputId("ModalLista", Prefix)").css("overflow", "auto");
+                        $.notify({ message: data.message, icon: 'fa fa-exclamation' }, { type: 'success', z_index: 2000, });
+
+                    },
+                    error: function (request) {
+                        alert("Erro ao adicionar registro")
+                    }
+                });
+            }
+        };
+
+    this.updatePais = function () {
+            var form = self.getFormPais();
+            var model = getModelPais(form);
+            if (self.isValidPais(model)) {
+                $.ajax({
+                    dataType: 'json',
+                    type: 'POST',
+                    url: '@Url.Action("jsUpdate", "Pais")',
+                    data: model,
+                    success: function (data) {
+                        self.clearPais();
+                        InitModalPaises();
+                        $("#@Pratica_Profissional.Util.Class.Helper.getInputId("ModalCreate", Prefix)").modal("hide");
+                        $("#@Pratica_Profissional.Util.Class.Helper.getInputId("ModalLista", Prefix)").css("overflow", "auto");
+                        $.notify({ message: data.message, icon: 'fa fa-exclamation' }, { type: 'success', z_index: 2000, });
+                    },
+                });
+            }
+    };*@
+
+    function InitModalClienteVenda() {
+        $("#TableClienteVenda").empty();
+        let tableClienteVenda = null
+        let lis = getTableClienteVenda();
+        $("#TableClienteVenda").append(lis);
+        tableClienteVenda = $('#listaClienteVenda').DataTable({
+            ajax: { url: $('#listaClienteVenda').attr('data-url') },
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese-Brasil.json',
+            },
+            columns: [
+                {
+                    sortable: false,
+                    data: null,
+                    sClass: 'details-control',
+                    mRender: function (data) {
+                        return '<a class="btn btn-warning btn-sm" data-event="item" title="Selecionar registro"><i class="fa fa-check"></i> </a>';
+                    }
+                },
+                {
+                    sortable: false,
+                    data: null,
+                    mRender: function (data) {
+                        return '<a class="btn btn-info btn-sm" onclick="OpenEditClienteVenda(' + data.id + ')" title="Alterar registro"><i class="fa fa-edit"></i> </a>';
+                    }
+                },
+                { data: "id" },
+                { data: "text" },
+            ],
+        });
+
+        $("#@Pratica_Profissional.Util.Class.Helper.getInputId("ModalLista", Prefix)").modal("show");
+        $("#@Pratica_Profissional.Util.Class.Helper.getInputId("isEdit", Prefix)").val("S");
+
+        $('#listaClienteVenda tbody').on('click', 'td.details-control', function () {
+            var tr = $(this).closest('tr');
+            var row = tableClienteVenda.row(tr);
+            row.child(SelectClienteVenda(row.data())).show();
+            tr.addClass('shown');
+            $('div.slider', row.child()).slideDown();
+        });
+    }
+
+    function getTableClienteVenda() {
+        let tmp = `<table id="listaClienteVenda" class="table table-striped table-bordered" style="width:100%" data-url="@Url.Action("JsQuery", "Cliente")">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th export="true" style="width:10%">Código</th>
+                                <th export="true" style="width:90%">Nome</th>
+                            </tr>
+                        </thead>
+                   </table>`;
+          return tmp;
+    };
+    function FecharModalClienteVenda() {
+        $("#@Pratica_Profissional.Util.Class.Helper.getInputId("ModalLista", Prefix)").modal("hide");
+    };
+    function FecharModalCreateClienteVenda() {
+        $("#@Pratica_Profissional.Util.Class.Helper.getInputId("ModalCreate", Prefix)").css("overflow", "hidden");
+        $("#@Pratica_Profissional.Util.Class.Helper.getInputId("ModalCreate", Prefix)").modal("hide");
+        $("#@Pratica_Profissional.Util.Class.Helper.getInputId("ModalLista", Prefix)").css("overflow", "auto");
+    };
+    function OpenModalCreateClienteVenda() {
+        $("#@Pratica_Profissional.Util.Class.Helper.getInputId("btnUpdate", Prefix)").hide();
+        $("#@Pratica_Profissional.Util.Class.Helper.getInputId("ModalLista", Prefix)").css("overflow", "hidden");
+        $("#@Pratica_Profissional.Util.Class.Helper.getInputId("ModalCreate", Prefix)").css("overflow", "auto");
+        $("#@Pratica_Profissional.Util.Class.Helper.getInputId("ModalCreate", Prefix)").modal("show");
+        $("#@Pratica_Profissional.Util.Class.Helper.getInputId("isEdit", Prefix)").val("N");
+        if ($("#@Pratica_Profissional.Util.Class.Helper.getInputId("isEdit", Prefix)").val() == "N") {
+            $(".isEdit").hide();
+        }
+    };
+    function SelectClienteVenda(data) {
+        $("#@Pratica_Profissional.Util.Class.Helper.getInputId("ModalLista", Prefix)").modal("hide");
+        $("#@Pratica_Profissional.Util.Class.Helper.getInputId("idCliente", Prefix)").val(data.id);
+        $("#@Pratica_Profissional.Util.Class.Helper.getInputId("text", Prefix)").val(data.text);
+        return false;
+    };
+    @*function OpenEditFornecedor(id) {
+        $.ajax({
+            dataType: 'json',
+            type: 'GET',
+            url: '@Url.Action("JsDetails", "Pais")',
+            data: { 'id': id },
+            success: function (data) {
+                self.clearPais();
+                $("#@Pratica_Profissional.Util.Class.Helper.getInputId("ModalCreate", Prefix)").modal("show");
+                $("#@Pratica_Profissional.Util.Class.Helper.getInputId("isEdit", Prefix)").val("S");
+                if ($("#@Pratica_Profissional.Util.Class.Helper.getInputId("isEdit", Prefix)").val() == "S") {
+                    $(".isEdit").show();
+                }
+                    $("#@Pratica_Profissional.Util.Class.Helper.getInputId("idPais", Prefix)").val(data.id);
+                    $("#@Pratica_Profissional.Util.Class.Helper.getInputId("nmPais", Prefix)").val(data.text);
+                    $("#@Pratica_Profissional.Util.Class.Helper.getInputId("ddi", Prefix)").val(data.ddi);
+                    $("#@Pratica_Profissional.Util.Class.Helper.getInputId("sigla", Prefix)").val(data.sigla);
+                    $("#@Pratica_Profissional.Util.Class.Helper.getInputId("dtCadastro", Prefix)").val(data.dtCadastro);
+                    $("#@Pratica_Profissional.Util.Class.Helper.getInputId("dtUltAlteracao", Prefix)").val(data.dtUltAlteracao);
+                    $("#@Pratica_Profissional.Util.Class.Helper.getInputId("ModalLista", Prefix)").css("overflow", "auto");
+            },
+            error: function (request) {
+                alert("Erro ao buscar registro");
+            }
+        });
+        return false;
+    }*@
+</script>
+)

@@ -7,7 +7,7 @@ namespace Pratica_Profissional.Models
     public class CondicaoPagamento
     {
         [Display(Name = "Código")]
-        public int idCondicaoPagamento { get; set; }
+        public int? idCondicaoPagamento { get; set; }
 
         [Display(Name = "Condição pagamento")]
         public string nmCondicaoPagamento { get; set; }

@@ -14,7 +14,7 @@ namespace Pratica_Profissional.ViewModel
             bean.serieNota = this.serieNota;
             bean.nrNota = this.nrNota;
             bean.idFornecedor = this.Fornecedor.idFornecedor ?? 0;
-            bean.idCondPagamento = this.CondicaoPagamento.idCondicaoPagamento ?? 0;
+            bean.idCondPagamento = this.CondicaoPagamento.idCondicaoPagamento ?? null;
             bean.dtEmissao = Convert.ToDateTime(this.dtEmissao);
             if (this.dtEntrega != null)
             {

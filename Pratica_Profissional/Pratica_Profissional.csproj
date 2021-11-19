@@ -308,6 +308,7 @@
     <Content Include="Scripts\Compra\Create.js" />
     <Content Include="Scripts\CondicaoPagamento\Create.js" />
     <Content Include="Scripts\CondicaoPagamento\Details.js" />
+    <Content Include="Scripts\ContaReceber\Index.js" />
     <Content Include="Scripts\dataTables.bootstrap4.js" />
     <Content Include="Scripts\dataTables.bootstrap4.min.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />
@@ -513,6 +514,7 @@
     <Content Include="Scripts\moment-with-locales.min.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
+    <Content Include="Scripts\Movimento\Index.js" />
     <Content Include="Scripts\OrdemServico\Index.js" />
     <Content Include="Scripts\OrdemServico\Create.js" />
     <Content Include="Scripts\Util.js" />
@@ -591,6 +593,7 @@
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
     <Content Include="Scripts\Venda\Create.js" />
+    <Content Include="Scripts\Venda\Index.js" />
     <Content Include="Views\Pais\Form.cshtml" />
     <Content Include="Scripts\Paises\Index.js" />
     <Content Include="Scripts\select2.js" />
@@ -602,7 +605,10 @@
   <ItemGroup>
     <Compile Include="App_Start\BinderConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\ContaReceberController.cs" />
     <Compile Include="Controllers\OrdemServicoController.cs" />
+    <Compile Include="Controllers\ContaContabilController.cs" />
+    <Compile Include="Controllers\MovimentoController.cs" />
     <Compile Include="Controllers\VendaController.cs" />
     <Compile Include="Controllers\CompraController.cs" />
     <Compile Include="Controllers\ServicoController.cs" />
@@ -617,6 +623,9 @@
     <Compile Include="Controllers\EstadoController.cs" />
     <Compile Include="Controllers\PaisController.cs" />
     <Compile Include="DAO\DAO.cs" />
+    <Compile Include="DAO\DAOConta.cs" />
+    <Compile Include="DAO\DAOContaReceber.cs" />
+    <Compile Include="DAO\DAOMovimento.cs" />
     <Compile Include="DAO\DAOVenda.cs" />
     <Compile Include="DAO\DAOOrdemServico.cs" />
     <Compile Include="DAO\DAOCompra.cs" />
@@ -634,9 +643,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ContaContabil.cs" />
     <Compile Include="Models\ContasReceber.cs" />
     <Compile Include="Models\ContasPagar.cs" />
     <Compile Include="Models\HistoricoOrdemServico.cs" />
+    <Compile Include="Models\Movimento.cs" />
     <Compile Include="Models\ServicosVenda.cs" />
     <Compile Include="Models\ServicosOrdemServico.cs" />
     <Compile Include="Models\ItemOrdemServico.cs" />
@@ -660,6 +671,8 @@
     <Compile Include="Models\Categoria.cs" />
     <Compile Include="Models\Pais.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\ContaReceberVM.cs" />
+    <Compile Include="ViewModel\ContaVM.cs" />
     <Compile Include="ViewModel\OrdemServicoVM.cs" />
     <Compile Include="ViewModel\VendaVM.cs" />
     <Compile Include="ViewModel\FuncionarioVM.cs" />
@@ -782,15 +795,11 @@
     <Content Include="Views\Compra\Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Produto\Select.cshtml" />
     <Content Include="Views\Venda\Create.cshtml" />
-    <Content Include="Views\Venda\Delete.cshtml" />
-    <Content Include="Views\Venda\Details.cshtml" />
-    <Content Include="Views\Venda\Edit.cshtml" />
     <Content Include="Views\Venda\Form.cshtml" />
     <Content Include="Views\Venda\Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Cliente\Select.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Funcionario\Select.cshtml" />
     <Content Include="Views\OrdemServico\Create.cshtml" />
-    <Content Include="Views\OrdemServico\Delete.cshtml" />
     <Content Include="Views\OrdemServico\Details.cshtml" />
     <Content Include="Views\OrdemServico\Edit.cshtml" />
     <Content Include="Views\OrdemServico\Form.cshtml" />
@@ -802,6 +811,20 @@
     <Content Include="Scripts\jquery-3.6.0.min.map" />
     <Content Include="Scripts\moment.min.js.map" />
     <Content Include="Scripts\moment-with-locales.min.js.map" />
+    <Content Include="Views\Shared\EditorTemplates\FuncionarioVenda\Select.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ClienteVenda\Select.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\CondicaoPagamentoVenda\Select.cshtml" />
+    <Content Include="Views\ContaContabil\Create.cshtml" />
+    <Content Include="Views\ContaContabil\Delete.cshtml" />
+    <Content Include="Views\ContaContabil\Details.cshtml" />
+    <Content Include="Views\ContaContabil\Edit.cshtml" />
+    <Content Include="Views\ContaContabil\Form.cshtml" />
+    <Content Include="Views\ContaContabil\Index.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Conta\Select.cshtml" />
+    <Content Include="Views\ContaReceber\Index.cshtml" />
+    <Content Include="Views\ContaReceber\Pagar.cshtml" />
+    <Content Include="Views\ContaReceber\Form.cshtml" />
+    <Content Include="Views\Movimento\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -5,7 +5,6 @@ namespace Pratica_Profissional.Models
 {
     public class CondicaoPagamentoParcela
     {
-        public int? idParcela { get; set; }
         public int? idFormaPagamento { get; set; }
         public string nmFormaPagamento { get; set; }
         public int? idCondicaoPagamento { get; set; }

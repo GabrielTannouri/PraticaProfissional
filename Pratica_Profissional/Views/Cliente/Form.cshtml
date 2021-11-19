@@ -133,7 +133,7 @@
         <div class="form-row">
             <div class="@Helper.Input3" id="divDtNascimento">
                 @Html.LabelFor(model => model.dtNascimento, "Data de nascimento", new { @class = "required" })
-                @Html.TextBoxFor(model => model.dtNascimento, new { @type = "date", @class = "form-control datepicker", @id = "dtNascimento" })
+                @Html.TextBoxFor(model => model.dtNascimento, new { @type = "date", @class = "form-control", @id = "dtNascimento" })
                 @Html.ValidationMessageFor(model => model.dtNascimento, null, new { @class = "text-danger" })
             </div>
 
@@ -156,7 +156,7 @@
 
             <div class="@Helper.Input3" id="divRG">
                 @Html.LabelFor(model => model.rg, "RG", new { @class = Helper.LabelTop })
-                @Html.TextBoxFor(model => model.rg, new { @class = "form-control", @id = "rg" })
+                @Html.TextBoxFor(model => model.rg, new { @class = "form-control" })
             </div>
 
             <div class="@Helper.Input3" id="divInscricao">

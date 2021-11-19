@@ -8,7 +8,7 @@ namespace Pratica_Profissional.DAO
     public class DAOOrdemServico : DAO
     {
 
-        public string Situacao (string flSituacao)
+        public string Situacao(string flSituacao)
         {
             if (flSituacao == "A")
                 return "ABERTA";
@@ -112,7 +112,7 @@ namespace Pratica_Profissional.DAO
                     comando4.Parameters.AddWithValue("@dtsituacao", ordemServico.dtSituacao);
                     comando4.Parameters.AddWithValue("@idfuncionario", ordemServico.idFuncionario);
                     comando4.ExecuteNonQuery();
-                   
+
                     sqlTrans.Commit();
 
                     return true;
@@ -185,44 +185,72 @@ namespace Pratica_Profissional.DAO
                 AbrirConexao();
                 var _where = string.Empty;
                 _where = " WHERE idordemservico = " + idOrdemServico;
-                SqlQuery = new SqlCommand("SELECT * FROM tbOrdensServico INNER JOIN tbClientes on tbOrdensServico.idcliente = tbClientes.idcliente " +
-                                          "INNER JOIN tbFuncionarios on tbOrdensServico.idfuncionario = tbFuncionarios.idfuncionario " +
-                                          "INNER JOIN tbProdutos on tbOrdensServico.idproduto = tbProdutos.idproduto " + _where, con);
+
+                SqlQuery = new SqlCommand(@"
+                SELECT
+                        tbOrdensServico.idordemservico AS OrdemServico_ID,
+                        tbOrdensServico.dtsituacao AS OrdemServico_DataSituacao,
+                        tbOrdensServico.dtfinalizado AS OrdemServico_DataFinalizado,
+                        tbOrdensServico.idfuncionario AS OrdemServico_IDFuncionario,
+                        tbOrdensServico.idcliente AS OrdemServco_Cliente_ID,
+                        tbOrdensServico.idproduto AS OrdemServico_Produto_ID,
+                        tbOrdensServico.idcondicaoPagamento AS OrdemServico_Condicao_ID,
+                        tbOrdensServico.dsproduto AS OrdemServico_DescricaoProduto,
+                        tbOrdensServico.dsproblema AS OrdemServico_DescricaoProblema,
+                        tbOrdensServico.vldesconto AS OrdemServico_Desconto,
+                        tbOrdensServico.vltotal AS OrdemServico_Total,
+                        tbOrdensServico.flsituacao AS OrdemServico_Situacao,
+                        tbOrdensServico.dtcadastro AS OrdemServico_Cadastro,
+                        tbOrdensServico.dtatualizacao AS OrdemServico_Atualizacao,
+                        tbClientes.nmcliente AS Cliente_Nome,
+                        tbFuncionarios.nmfuncionario AS Funcionario_Nome,
+                        tbProdutos.nmProduto AS Produto_Nome,
+                        tbCondicaoPagamentos.nmcondicaopagamento AS CondicaoPagamento_Nome
+                FROM tbOrdensServico 
+                       INNER JOIN tbClientes on tbOrdensServico.idcliente = tbClientes.idcliente 
+                       INNER JOIN tbFuncionarios on tbOrdensServico.idfuncionario = tbFuncionarios.idfuncionario 
+                       INNER JOIN tbProdutos on tbOrdensServico.idproduto = tbProdutos.idproduto 
+                       LEFT JOIN tbCondicaoPagamentos on tbOrdensServico.idcondicaoPagamento = tbCondicaoPagamentos.idcondicaopagamento " + _where, con);
+
                 reader = SqlQuery.ExecuteReader();
                 var objOrdemServico = new OrdemServico();
                 while (reader.Read())
                 {
                     objOrdemServico = new OrdemServico()
                     {
-                        idOrdemServico = Convert.ToInt32(reader["idordemservico"]),
-                        dtSituacao = Convert.ToDateTime(reader["dtsituacao"]),
-                        dtFinalizado = Convert.ToDateTime(reader["dtfinalizado"] != DBNull.Value ? reader["dtfinalizado"] : null),
+                        idOrdemServico = Convert.ToInt32(reader["OrdemServico_ID"]),
+                        dtSituacao = Convert.ToDateTime(reader["OrdemServico_DataSituacao"]),
+                        dtFinalizado = Convert.ToDateTime(reader["OrdemServico_DataFinalizado"] != DBNull.Value ? reader["OrdemServico_DataFinalizado"] : null),
                         Funcionario = new Funcionario
                         {
-                            idPessoa = Convert.ToInt32(reader["idfuncionario"]),
-                            nmPessoa = Convert.ToString(reader["nmfuncionario"]),
+                            idPessoa = Convert.ToInt32(reader["OrdemServico_IDFuncionario"]),
+                            nmPessoa = Convert.ToString(reader["Funcionario_Nome"]),
                         },
                         Cliente = new Cliente
                         {
-                            idPessoa = Convert.ToInt32(reader["idcliente"]),
-                            nmPessoa = Convert.ToString(reader["nmcliente"]),
+                            idPessoa = Convert.ToInt32(reader["OrdemServco_Cliente_ID"]),
+                            nmPessoa = Convert.ToString(reader["Cliente_Nome"]),
                         },
                         Produto = new Produto
                         {
-                            idProduto = Convert.ToInt32(reader["idproduto"]),
-                            nmProduto = Convert.ToString(reader["nmproduto"]),
+                            idProduto = Convert.ToInt32(reader["OrdemServico_Produto_ID"]),
+                            nmProduto = Convert.ToString(reader["Produto_Nome"]),
                         },
-                        dsProduto = Convert.ToString(reader["dsproduto"] != DBNull.Value ? reader["dsproduto"] : null),
-                        dsProblema = Convert.ToString(reader["dsproblema"]),
-                        vlDesconto = Convert.ToDecimal(reader["vldesconto"] != DBNull.Value ? reader["vldesconto"] : null),
-                        vlTotal = Convert.ToDecimal(reader["vltotal"]),
-                        flSituacao = Convert.ToString(reader["flsituacao"]),
-                        dtCadastro = Convert.ToDateTime(reader["dtcadastro"]),
-                        dtAtualizacao = Convert.ToDateTime(reader["dtatualizacao"]),
+                        dsProduto = Convert.ToString(reader["OrdemServico_DescricaoProduto"] != DBNull.Value ? reader["OrdemServico_DescricaoProduto"] : null),
+                        dsProblema = Convert.ToString(reader["OrdemServico_DescricaoProblema"]),
+                        vlDesconto = Convert.ToDecimal(reader["OrdemServico_Desconto"] != DBNull.Value ? reader["OrdemServico_Desconto"] : null),
+                        vlTotal = Convert.ToDecimal(reader["OrdemServico_Total"]),
+                        flSituacao = Convert.ToString(reader["OrdemServico_Situacao"]),
+                        dtCadastro = Convert.ToDateTime(reader["OrdemServico_Cadastro"]),
+                        dtAtualizacao = Convert.ToDateTime(reader["OrdemServico_Atualizacao"]),
+                        CondicaoPagamento = new CondicaoPagamento
+                        {
+                            idCondicaoPagamento = Convert.ToInt32(reader["OrdemServico_Condicao_ID"] != DBNull.Value ? reader["OrdemServico_Condicao_ID"] : null),
+                            nmCondicaoPagamento = Convert.ToString(reader["CondicaoPagamento_Nome"] != DBNull.Value ? reader["CondicaoPagamento_Nome"] : null),
+                        },
                         ItensOrdemServico = this.GetItensByID(idOrdemServico),
                         ServicosOrdemServico = this.GetServicosOrdemServico(idOrdemServico),
                         historico = this.GetHistorico(idOrdemServico),
-                        //contasReceber = this.GetParcelasByID(idOrdemServico),
                     };
                 }
                 return objOrdemServico;
@@ -260,7 +288,7 @@ namespace Pratica_Profissional.DAO
                         vlTotalProduto = Convert.ToDecimal(reader["vlunitario"]) * Convert.ToInt32(reader["qtproduto"]),
                         dtCadastro = Convert.ToDateTime(reader["dtcadastro"]),
                         dtAtualizacao = Convert.ToDateTime(reader["dtatualizacao"]),
-                      
+
                     };
                     itens.Add(obj);
                 }
@@ -313,50 +341,6 @@ namespace Pratica_Profissional.DAO
 
         }
 
-        //public List<ContasReceber> GetParcelasByID(int idOrdemServico)
-        //{
-        //    try
-        //    {
-        //        AbrirConexao();
-        //        var _where = string.Empty;
-        //        _where = " WHERE A.modnota = '" + modNota + "' AND A.serienota  = '" + serieNota + "' AND A.nrnota  = " + nrNota + " AND A.idfornecedor =" + idFornecedor;
-        //        SqlQuery = new SqlCommand("SELECT * FROM tbServicosOrdemServico A INNER JOIN tbServicos B on A.idservico = B.idservico" + _where, con);
-        //        reader = SqlQuery.ExecuteReader();
-        //        List<ContasPagar> parcelas = new List<ContasPagar>();
-        //        while (reader.Read())
-        //        {
-        //            var obj = new ContasPagar()
-        //            {
-        //                modNota = Convert.ToString(reader["modnota"]),
-        //                serieNota = Convert.ToString(reader["serienota"]),
-        //                nrNota = Convert.ToInt32(reader["nrnota"]),
-        //                idFornecedor = Convert.ToInt32(reader["idfornecedor"]),
-        //                nrParcela = Convert.ToInt32(reader["nrparcela"]),
-        //                dtVencimento = Convert.ToDateTime(reader["dtvencimento"]),
-        //                flSituacao = Convert.ToString(reader["flsituacao"]),
-        //                vlDesconto = Convert.ToDecimal(reader["vldesconto"] != DBNull.Value ? reader["vldesconto"] : null),
-        //                vlJuros = Convert.ToDecimal(reader["vljuros"] != DBNull.Value ? reader["vljuros"] : null),
-        //                vlMulta = Convert.ToDecimal(reader["vlmulta"] != DBNull.Value ? reader["vlmulta"] : null),
-        //                vlPago = Convert.ToDecimal(reader["vlpago"] != DBNull.Value ? reader["vlpago"] : null),
-        //                dtPagamento = Convert.ToDateTime(reader["dtpagamento"] != DBNull.Value ? reader["dtpagamento"] : null),
-        //                vlParcela = Convert.ToDecimal(reader["vlparcela"]),
-        //                dtCadastro = Convert.ToDateTime(reader["dtcadastro"]),
-        //                dtAtualizacao = Convert.ToDateTime(reader["dtatualizacao"]),
-        //                idFormaPagamento = Convert.ToInt32(reader["idformapagamento"]),
-        //                nmFormaPagamento = Convert.ToString(reader["nmformapagamento"]),
-        //            };
-        //            parcelas.Add(obj);
-        //        }
-
-        //        return parcelas;
-        //    }
-        //    catch (Exception error)
-        //    {
-        //        throw new Exception(error.Message);
-        //    }
-
-        //}
-
         public List<HistoricoOrdemServico> GetHistorico(int idOrdemServico)
         {
             try
@@ -401,7 +385,7 @@ namespace Pratica_Profissional.DAO
             SqlCommand comando5 = con.CreateCommand();
             SqlCommand comando6 = con.CreateCommand();
 
-            comando1.CommandText = "UPDATE tbOrdensServico SET dtsituacao=@dtsituacao, vldesconto=@vldesconto, vltotal=@vltotal, flsituacao=@flsituacao, " +
+            comando1.CommandText = "UPDATE tbOrdensServico SET idcondicaopagamento=@idcondicaopagamento, dtsituacao=@dtsituacao, vldesconto=@vldesconto, vltotal=@vltotal, flsituacao=@flsituacao, " +
                 "dtatualizacao=@dtatualizacao WHERE idordemservico=@idordemservico;";
 
             comando2.CommandText = "DELETE FROM tbItensOrdemServico WHERE idordemservico = " + ordemServico.idOrdemServico;
@@ -425,6 +409,7 @@ namespace Pratica_Profissional.DAO
                 {
                     comando1.Transaction = sqlTrans;
                     comando1.Parameters.AddWithValue("@idordemservico", ordemServico.idOrdemServico);
+                    comando1.Parameters.AddWithValue("@idcondicaopagamento", ordemServico.idCondicaoPagamento ?? (object)DBNull.Value);
                     comando1.Parameters.AddWithValue("@dtsituacao", ordemServico.dtSituacao);
                     comando1.Parameters.AddWithValue("@vldesconto", ordemServico.vlDesconto);
                     comando1.Parameters.AddWithValue("@vltotal", ordemServico.vlTotal);

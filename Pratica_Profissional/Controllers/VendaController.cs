@@ -11,13 +11,13 @@ namespace Pratica_Profissional.Controllers
 {
     public class VendaController : Controller
     {
-        //DAOCompra daoCompra = new DAOCompra();
+        DAOVenda DAOVenda = new DAOVenda();
         // GET: Paises
         public ActionResult Index()
         {
-            //var daoCompra = new DAOCompra();
-            //List<Compra> lista = daoCompra.GetCondicaoPagamentos().ToList();
-            return View();
+            var daoVenda = new DAOVenda();
+            List<Venda> lista = daoVenda.GetVendas().ToList();
+            return View(lista);
         }
 
         [HttpGet]
@@ -34,11 +34,51 @@ namespace Pratica_Profissional.Controllers
             {
                 var daoOrdemServico = new DAOOrdemServico();
                 var objOrdemServico = daoOrdemServico.GetOrdemServicoByID(idOrdemServico ?? 0);
+                var objItensOrdemServico = daoOrdemServico.GetItensByID(idOrdemServico ?? 0);
+                var objServicosOrdemServico = daoOrdemServico.GetServicosOrdemServico(idOrdemServico ?? 0);
+
+                var listItens = new List<ItemVenda>();
+                foreach (var item in objItensOrdemServico)
+                {
+                    var itens = new Models.ItemVenda
+                    {
+                        idProduto = item.idProduto,
+                        nmProduto = item.nmProduto,
+                        flUnidade = item.flUnidade,
+                        qtProduto = item.qtProduto,
+                        vlUnitario = item.vlUnitario,
+                        vlTotalProduto = item.vlTotalProduto,
+                    };
+                    listItens.Add(itens);
+                }
+
+                var listServicos = new List<ServicosVenda>();
+                foreach (var item in objServicosOrdemServico)
+                {
+                    var itens = new Models.ServicosVenda
+                    {
+                        idServico = item.idServico,
+                        nmServico = item.nmServico,
+                        nmFuncionario = item.nmFuncionario,
+                        qtServico = item.qtServico,
+                        vlUnitarioServico = item.vlUnitarioServico,
+                        vlTotalServico = item.vlTotalServico,
+                    };
+                    listServicos.Add(itens);
+                }
 
                 VM.modNota = "55";
+                VM.modNotaServico = "56";
                 VM.serieNota = "1";
+                VM.serieNotaServico = "1";
                 VM.dtVenda = DateTime.Now.ToString("yyyy-MM-dd");
+                VM.dtVendaServico = DateTime.Now.ToString("yyyy-MM-dd");
                 VM.Funcionario = new ViewModel.FuncionarioVM
+                {
+                    idFuncionario = objOrdemServico.Funcionario.idPessoa,
+                    text = objOrdemServico.Funcionario.nmPessoa
+                };
+                VM.FuncionarioServico = new ViewModel.FuncionarioVM
                 {
                     idFuncionario = objOrdemServico.Funcionario.idPessoa,
                     text = objOrdemServico.Funcionario.nmPessoa
@@ -48,6 +88,24 @@ namespace Pratica_Profissional.Controllers
                     idCliente = objOrdemServico.Cliente.idPessoa,
                     text = objOrdemServico.Cliente.nmPessoa
                 };
+                VM.ClienteServico = new ViewModel.ClienteVM
+                {
+                    idCliente = objOrdemServico.Cliente.idPessoa,
+                    text = objOrdemServico.Cliente.nmPessoa
+                };
+                VM.ListItemVenda = listItens;
+                VM.ListServicosVenda = listServicos;
+                VM.CondicaoPagamento = new ViewModel.CondicaoPagamentoVM
+                {
+                    idCondicaoPagamento = objOrdemServico.CondicaoPagamento.idCondicaoPagamento,
+                    text = objOrdemServico.CondicaoPagamento.nmCondicaoPagamento,
+                };
+                VM.CondicaoPagamentoServico = new ViewModel.CondicaoPagamentoVM
+                {
+                    idCondicaoPagamento = objOrdemServico.CondicaoPagamento.idCondicaoPagamento,
+                    text = objOrdemServico.CondicaoPagamento.nmCondicaoPagamento,
+                };
+                ViewBag.flOrigem = "ordemServico";
                 return View(VM);
             }
 
@@ -56,50 +114,71 @@ namespace Pratica_Profissional.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(ViewModel.CondicaoPagamentoVM model)
+        public ActionResult Create(ViewModel.VendaVM model)
         {
-            if (string.IsNullOrEmpty(model.nmCondicaoPagamento))
+            if (string.IsNullOrEmpty(model.modNota))
             {
-                ModelState.AddModelError("nmCondicaoPagamento", "Por favor informe a condição de pagamento!");
+                ModelState.AddModelError("modNota", "Por favor informe o modelo da nota!");
             }
 
-            if (model.nmCondicaoPagamento != null)
+            if (model.serieNota != null)
             {
-                if (string.IsNullOrEmpty(model.nmCondicaoPagamento.Trim()))
+                if (string.IsNullOrEmpty(model.serieNota.Trim()))
                 {
-                    ModelState.AddModelError("nmCondicaoPagamento", "Por favor informe a condição de pagamento!");
+                    ModelState.AddModelError("serieNota", "Por favor informe a série da nota!");
                 }
             }
 
-            if (model.ListCondicao.Count() == 0)
+            if (model.Funcionario.idFuncionario == null)
             {
-                ModelState.AddModelError("ListCondicao", "Por favor informe ao menos uma parcela!");
+                ModelState.AddModelError("Funcionario.idFuncionario", "Por favor informe o funcionário!");
             }
 
-            var dtAtual = DateTime.Today;
-            model.dtCadastro = dtAtual.ToString("dd/MM/yyyy HH:mm");
-            model.dtAtualizacao = dtAtual.ToString("dd/MM/yyyy HH:mm");
-            try
+            if (model.Cliente.idCliente == null)
             {
-                //Populando o objeto para salvar;
-                var obj = model.VM2E(new Models.CondicaoPagamento());
+                ModelState.AddModelError("Cliente.idCliente", "Por favor informe o cliente!");
+            }
 
-                //Instanciando e chamando a DAO para salvar o objeto país no banco;
-                var daoCondicaoPagamento = new DAOCondicaoPagamento();
+            if (string.IsNullOrEmpty(model.dtVenda))
+            {
+                ModelState.AddModelError("dtVenda", "Por favor informe a data da venda!");
+            }
 
-                if (daoCondicaoPagamento.Create(obj))
+            if (model.ListItemVenda.Count() == 0 && model.ListVendaParcelas.Count() == 0)
+            {
+                ModelState.AddModelError("ListItemVenda", "Por favor informe ao menos um produto!");
+                ModelState.AddModelError("ListVendaParcelas", "Por favor informe ao menos um serviço ou produto!");
+            }
+
+            if (ModelState.IsValid)
+            {
+                var dtAtual = DateTime.Today;
+                model.dtCadastro = dtAtual.ToString("dd/MM/yyyy HH:mm");
+                model.dtAtualizacao = dtAtual.ToString("dd/MM/yyyy HH:mm");
+                try
                 {
-                    TempData["message"] = "Registro inserido com sucesso!";
-                    TempData["type"] = "sucesso";
-                }
+                    //Populando o objeto para salvar;
+                    var obj = model.VM2E(new Models.Venda());
 
-                return RedirectToAction("Index");
+                    //Instanciando e chamando a DAO para salvar o objeto país no banco;
+                    var daoVenda = new DAOVenda();
+                    var daoCondicaoPagamento = new DAOCondicaoPagamento();
+                    obj.flSituacao = "A";
+                    if (daoVenda.Create(obj, daoCondicaoPagamento.GetCondicaoPagamentosByID(obj.idCondPagamento)))
+                    {
+                        TempData["message"] = "Registro inserido com sucesso!";
+                        TempData["type"] = "sucesso";
+                    }
+
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    this.AddFlashMessage(ex.Message, FlashMessage.ERROR);
+                    return View(model);
+                }
             }
-            catch (Exception ex)
-            {
-                this.AddFlashMessage(ex.Message, FlashMessage.ERROR);
-                return View(model);
-            }
+            return View(model);
         }
 
         [HttpGet]
@@ -235,44 +314,6 @@ namespace Pratica_Profissional.Controllers
             }
         }
 
-        //public JsonResult JsCreate(Pais pais)
-        //{
-        //    var dtAtual = DateTime.Today;
-        //    pais.dtCadastro = dtAtual;
-        //    pais.dtAtualizacao = dtAtual;
-        //    try
-        //    {
-        //        var daoPaises = new DAOPais();
-        //        daoPaises.Create(pais);
-        //        var result = new
-        //        {
-        //            type = "success",
-        //            message = "País adicionado",
-        //            model = pais
-        //        };
-        //        return Json(result, JsonRequestBehavior.AllowGet);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Response.StatusCode = 500;
-        //        return Json(ex.Message, JsonRequestBehavior.AllowGet);
-        //    }
-        //}
-
-        //public JsonResult JsUpdate(Pais model)
-        //{
-        //    var daoPaises = new DAOPais();
-        //    daoPaises.Edit(model);
-        //    var result = new
-        //    {
-        //        type = "success",
-        //        field = "",
-        //        message = "Registro alterado com sucesso!",
-        //        model = model
-        //    };
-        //    return Json(result, JsonRequestBehavior.AllowGet);
-        //}
-
         private IQueryable<dynamic> Find(int? id, string q)
         {
             var daoCondicaoPagamento = new DAOCondicaoPagamento();
@@ -307,6 +348,27 @@ namespace Pratica_Profissional.Controllers
                 return Json(new DataTablesResponse(requestModel.Draw, result, totalResult, result.Count), JsonRequestBehavior.AllowGet);
 
 
+            }
+            catch (Exception ex)
+            {
+                Response.StatusCode = 500;
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public JsonResult JsSearch([ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest requestModel)
+        {
+            try
+            {
+
+                var daoVenda = new DAOVenda();
+
+                var select = daoVenda.GetVendas();
+
+                var totalResult = select.Count();
+                var result = select.OrderBy(requestModel.Columns, requestModel.Start, requestModel.Length).ToList();
+
+                return Json(new DataTablesResponse(requestModel.Draw, result, totalResult, result.Count), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {

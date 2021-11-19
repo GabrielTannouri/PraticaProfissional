@@ -24,10 +24,12 @@ namespace Pratica_Profissional.Models
         public decimal vlPago { get; set; }
         public DateTime dtCadastro { get; set; }
         public DateTime dtAtualizacao { get; set; }
+        public int? idConta { get; set; }
 
         public FormaPagamento formaPagamento { get; set; }
         public CondicaoPagamento condicaoPagamento { get; set; }
         public Cliente cliente { get; set; }
+        public ContaContabil Conta { get; set; }
 
     }
 }

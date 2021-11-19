@@ -1,0 +1,105 @@
+﻿@using Pratica_Profissional.Util.Class;
+@model Pratica_Profissional.ViewModel.ContaReceberVM
+
+@{
+    var action = ViewContext.Controller.ValueProvider.GetValue("action").RawValue.ToString().ToLower();
+    bool readOnly = Convert.ToBoolean(ViewBag.ReadOnly);
+}
+
+@Html.AntiForgeryToken()
+
+<h6 class="card-header">Informações</h6>
+
+<div class="card-body">
+
+    <div class="form-group">
+        <div class="form-row">
+            <div class="@Helper.Input2">
+                @Html.LabelFor(model => model.modNota, "Modelo", new { @class = "required" })
+                @Html.TextBoxFor(model => model.modNota, new { @class = "form-control", readOnly = "readOnly" })
+                @Html.ValidationMessageFor(model => model.modNota, null, new { @class = "text-danger" })
+            </div>
+
+            <div class="@Helper.Input2">
+                @Html.LabelFor(model => model.serieNota, "Série", new { @class = "required" })
+                @Html.TextBoxFor(model => model.serieNota, new { @class = "form-control", readOnly = "readOnly" })
+                @Html.ValidationMessageFor(model => model.serieNota, null, new { @class = "text-danger" })
+            </div>
+
+            <div class="@Helper.Input2">
+                @Html.LabelFor(model => model.nrNota, "Número nota", new { @class = "required" })
+                @Html.TextBoxFor(model => model.nrNota, new { @class = "form-control", readOnly = "readOnly" })
+                @Html.ValidationMessageFor(model => model.nrNota, null, new { @class = "text-danger" })
+            </div>
+
+            <div class="@Helper.Input3">
+                @Html.LabelFor(model => model.dtVencimento, "Data de vencimento", new { @class = "required" })
+                @Html.TextBoxFor(model => model.dtVencimento, new { @type = "date", @class = "form-control", readOnly = "readOnly" })
+                @Html.ValidationMessageFor(model => model.dtVencimento, null, new { @class = "text-danger" })
+            </div>
+
+            <div class="@Helper.Input3">
+                @Html.LabelFor(model => model.dtPagamento, "Data pagamento", new { @class = "required" })
+                @Html.TextBoxFor(model => model.dtPagamento, new { @type = "date", @class = "form-control", readOnly = "readOnly" })
+                @Html.ValidationMessageFor(model => model.dtPagamento, null, new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="form-row">
+            <div class="@Helper.Input3">
+                @Html.LabelFor(model => model.nrParcela, "Parcela", new { @class = Helper.LabelTop })
+                @Html.TextBoxFor(model => model.nrParcela, new { @class = "form-control integer", @disabled = true })
+            </div>
+
+            <div class="@Helper.Input2">
+                @Html.LabelFor(model => model.vlDesconto, "Desconto (R$)", new { @class = Helper.LabelTop })
+                @Html.TextBoxFor(model => model.vlDesconto, new { @class = "form-control currency", readOnly = "readOnly" })
+                @Html.ValidationMessageFor(model => model.vlDesconto, null, new { @class = "text-danger" })
+            </div>
+
+            <div class="@Helper.Input2">
+                @Html.LabelFor(model => model.vlJuros, "Juros (R$)", new { @class = Helper.LabelTop })
+                @Html.TextBoxFor(model => model.vlJuros, new { @class = "form-control currency", readOnly = "readOnly" })
+                @Html.ValidationMessageFor(model => model.vlJuros, null, new { @class = "text-danger" })
+            </div>
+
+            <div class="@Helper.Input2">
+                @Html.LabelFor(model => model.vlMulta, "Multa", new { @class = Helper.LabelTop })
+                @Html.TextBoxFor(model => model.vlMulta, new { @class = "form-control currency", readOnly = "readOnly" })
+                @Html.ValidationMessageFor(model => model.vlMulta, null, new { @class = "text-danger" })
+            </div>
+
+            <div class="@Helper.Input3">
+                @Html.LabelFor(model => model.vlParcela, "Parcela (R$)", new { @class = Helper.LabelTop })
+                @Html.TextBoxFor(model => model.vlParcela, new { @class = "form-control currency", readOnly = "readOnly" })
+                @Html.ValidationMessageFor(model => model.vlParcela, null, new { @class = "text-danger" })
+            </div>
+
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="form-row">
+            @Html.EditorFor(model => model.Conta, "Conta/select", new { disabled = false })
+        </div>
+    </div>
+</div>
+
+<div class="d-flex justify-content-end" style="padding-right:33px">
+    <button type="button" style="margin-right:10px" class="btn btn-primary" onclick="location.href='@Url.Action("Index", "ContaReceber")'">Sair</button>
+    @if ((action != "details") && (action != "delete"))
+    {
+        <button type="submit" class="btn btn-success">Realizar pagamento</button>
+    }
+    @if (action == "delete")
+    {
+        <button type="submit" class="btn btn-danger">Remover</button>
+    }
+
+</div>
+
+
+
+

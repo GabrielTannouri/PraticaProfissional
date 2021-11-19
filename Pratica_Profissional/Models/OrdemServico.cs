@@ -9,7 +9,7 @@ namespace Pratica_Profissional.Models
         public int idOrdemServico { get; set; }
         public DateTime dtSituacao { get; set; }
         public DateTime? dtFinalizado { get; set; }
-        public int idFuncionario { get; set; }
+        public int? idFuncionario { get; set; }
         public int idCliente { get; set; }
         public int idProduto { get; set; }
         public int? idCondicaoPagamento { get; set; }

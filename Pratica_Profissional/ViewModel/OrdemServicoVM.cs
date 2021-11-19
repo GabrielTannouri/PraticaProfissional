@@ -17,8 +17,8 @@ namespace Pratica_Profissional.ViewModel
             {
                 bean.dtFinalizado = this.dtFinalizado;
             }
-            bean.idFuncionario = this.Funcionario.idFuncionario ?? 0;
-            bean.idCondicaoPagamento = this.CondicaoPagamento.idCondicaoPagamento ?? 0;
+            bean.idFuncionario = this.Funcionario.idFuncionario ?? null;
+            bean.idCondicaoPagamento = this.CondicaoPagamento.idCondicaoPagamento ?? null;
             bean.idCliente = this.Cliente.idCliente ?? 0;
             bean.idProduto = this.Produto.idProduto ?? 0;
             bean.dsProduto = this.dsProduto;

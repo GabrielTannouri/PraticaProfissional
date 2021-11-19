@@ -127,3 +127,23 @@ function SituacaoHistorico(data) {
         return "CANCELADO";
     }
 }
+
+function SituacaoVenda(data) {
+    let flSituacao = data;
+    if (flSituacao == "A") {
+        return "ABERTA";
+    }
+    if (flSituacao == "F") {
+        return "FINALIZADA";
+    }
+}
+
+function SituacaoContaReceber(data) {
+    let flSituacao = data;
+    if (flSituacao == "A") {
+        return "ABERTA";
+    }
+    if (flSituacao == "P") {
+        return "PAGA";
+    }
+}

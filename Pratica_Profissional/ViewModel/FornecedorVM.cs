@@ -35,7 +35,7 @@ namespace Pratica_Profissional.ViewModel
             bean.dtCadastro = Convert.ToDateTime(this.dtCadastro);
             bean.dtAtualizacao = Convert.ToDateTime(this.dtAtualizacao);
             bean.flTipo = this.flTipo;
-            bean.idCondicaoPagamento = this.condicaoPagamento.idCondicaoPagamento ?? 0;
+            bean.idCondicaoPagamento = this.condicaoPagamento.idCondicaoPagamento ?? null;
             bean.limiteCredito = this.limiteCredito;
 
             return bean;

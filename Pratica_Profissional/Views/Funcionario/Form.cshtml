@@ -116,7 +116,7 @@
         <div class="form-row">
             <div class="@Helper.Input3">
                 @Html.LabelFor(model => model.dtNascimento, "Data de nascimento", new { @class = "required" })
-                @Html.TextBoxFor(model => model.dtNascimento, new { @type = "date", @class = "form-control datepicker", @id = "dtNascimento" })
+                @Html.TextBoxFor(model => model.dtNascimento, new { @type = "date", @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.dtNascimento, null, new { @class = "text-danger" })
             </div>
 
@@ -133,7 +133,7 @@
 
             <div class="@Helper.Input3">
                 @Html.LabelFor(model => model.rg, "RG", new { @class = Helper.LabelTop })
-                @Html.TextBoxFor(model => model.rg, new { @class = "form-control", @id = "rg", })
+                @Html.TextBoxFor(model => model.rg, new { @class = "form-control" })
             </div>
 
         </div>
@@ -156,14 +156,14 @@
 
             <div class="@Helper.Input3">
                 @Html.LabelFor(model => model.dtAdmissao, "Data de admissão", new { @class = "required" })
-                @Html.TextBoxFor(model => model.dtAdmissao, new { @type = "date", @class = "form-control datepicker" })
+                @Html.TextBoxFor(model => model.dtAdmissao, new { @type = "date", @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.dtAdmissao, null, new { @class = "text-danger" })
             </div>
             @if (action != "create")
             {
                 <div class="@Helper.Input3">
                     @Html.LabelFor(model => model.dtDemissao, "Data de demissão", new { @class = Helper.LabelTop })
-                    @Html.TextBoxFor(model => model.dtDemissao, new { @type = "date", @class = "form-control datepicker" })
+                    @Html.TextBoxFor(model => model.dtDemissao, new { @type = "date", @class = "form-control" })
                 </div>
             }
 

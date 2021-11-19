@@ -57,12 +57,8 @@ namespace Pratica_Profissional.Controllers
                     //Populando o objeto para salvar;
                     var obj = model.VM2E(new Models.OrdemServico());
 
-                    //Instanciando e chamando a DAO para salvar o objeto país no banco;
+                    //Instanciando e chamando a DAO para salvar o objeto OS no banco;
                     var daoOrdemServico = new DAOOrdemServico();
-                    if (obj.idCondicaoPagamento == 0)
-                    {
-                        obj.idCondicaoPagamento = null;
-                    }
 
                     if (daoOrdemServico.Create(obj))
                     {
@@ -187,6 +183,11 @@ namespace Pratica_Profissional.Controllers
 
                 var model = daoOrdemServico.GetOrdemServicoByID(id);
 
+                if (model.CondicaoPagamento.idCondicaoPagamento == 0)
+                {
+                    model.CondicaoPagamento.idCondicaoPagamento = null;
+                }
+
                 var VM = new ViewModel.OrdemServicoVM
                 {
                     idOrdemServico = model.idOrdemServico,
@@ -207,6 +208,11 @@ namespace Pratica_Profissional.Controllers
                     {
                         idProduto = model.Produto.idProduto,
                         text = model.Produto.nmProduto,
+                    },
+                    CondicaoPagamento = new ViewModel.CondicaoPagamentoVM
+                    {
+                        idCondicaoPagamento = model.CondicaoPagamento.idCondicaoPagamento != null ? model.CondicaoPagamento.idCondicaoPagamento : null,
+                        text = model.CondicaoPagamento.nmCondicaoPagamento,
                     },
                     dsProduto = model.dsProduto,
                     dsProblema = model.dsProblema,
@@ -242,44 +248,6 @@ namespace Pratica_Profissional.Controllers
                 throw new Exception(ex.Message);
             }
         }
-
-        //public JsonResult JsCreate(Pais pais)
-        //{
-        //    var dtAtual = DateTime.Today;
-        //    pais.dtCadastro = dtAtual;
-        //    pais.dtAtualizacao = dtAtual;
-        //    try
-        //    {
-        //        var daoPaises = new DAOPais();
-        //        daoPaises.Create(pais);
-        //        var result = new
-        //        {
-        //            type = "success",
-        //            message = "País adicionado",
-        //            model = pais
-        //        };
-        //        return Json(result, JsonRequestBehavior.AllowGet);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Response.StatusCode = 500;
-        //        return Json(ex.Message, JsonRequestBehavior.AllowGet);
-        //    }
-        //}
-
-        //public JsonResult JsUpdate(Pais model)
-        //{
-        //    var daoPaises = new DAOPais();
-        //    daoPaises.Edit(model);
-        //    var result = new
-        //    {
-        //        type = "success",
-        //        field = "",
-        //        message = "Registro alterado com sucesso!",
-        //        model = model
-        //    };
-        //    return Json(result, JsonRequestBehavior.AllowGet);
-        //}
 
         private IQueryable<dynamic> Find(int? id, string q)
         {
